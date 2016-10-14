@@ -45,6 +45,7 @@ class GamesController extends Controller
             }
         }
 
+        $tmpPath = $file->path();
         $path = $this->fs->putFile('recordings', $file);
 
         $filename = $file->getClientOriginalName();
@@ -53,11 +54,7 @@ class GamesController extends Controller
         // to a filename-based slug if the player data can't be extracted properly.
         $defaultSlug = str_slug(substr($filename, 0, strrpos($filename, '.')));
         try {
-            // TODO Doesn't work currently, because this path is relative to the
-            // local Disk instance, not the current working directory.
-            // Should add a ServiceProvider that makes `\RecAnalyst\RecordedGame`s
-            // work with laravel Disks.
-            $rec = new RecAnalyst($path);
+            $rec = new RecAnalyst($tmpPath);
 
             $teams = $rec->teams();
             $teamSlug = implode(' VS ', array_map(function ($team) {

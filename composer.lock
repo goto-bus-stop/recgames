@@ -1160,12 +1160,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/goto-bus-stop/recanalyst.git",
-                "reference": "9e656624ecadf4ef5e8a681f4867df1f9b1ed4a2"
+                "reference": "51838e90d72ef1e2fa7d00e89c96ab522e572899"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/goto-bus-stop/recanalyst/zipball/9e656624ecadf4ef5e8a681f4867df1f9b1ed4a2",
-                "reference": "9e656624ecadf4ef5e8a681f4867df1f9b1ed4a2",
+                "url": "https://api.github.com/repos/goto-bus-stop/recanalyst/zipball/51838e90d72ef1e2fa7d00e89c96ab522e572899",
+                "reference": "51838e90d72ef1e2fa7d00e89c96ab522e572899",
                 "shasum": ""
             },
             "require": {
@@ -1198,7 +1198,7 @@
             ],
             "description": "Analyzes Age of Empires 2 recorded game files.",
             "homepage": "http://idlebeaver.ninja/recanalyst",
-            "time": "2016-10-14 10:29:25"
+            "time": "2016-10-14 16:29:37"
         },
         {
             "name": "swiftmailer/swiftmailer",
