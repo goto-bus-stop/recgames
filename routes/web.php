@@ -14,3 +14,8 @@
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/upload', 'GamesController@uploadForm');
+Route::post('/upload', 'GamesController@upload');
+
+Route::get('/game/{slug}', 'GamesController@show');
