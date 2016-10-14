@@ -1,19 +1,22 @@
-const elixir = require('laravel-elixir');
+const gulp = require('gulp')
+const postcss = require('gulp-postcss')
+const cssnano = require('cssnano')
+const cssNext = require('postcss-cssnext')
+const cssImport = require('postcss-import')
+const options = require('gulp-util').env
 
-require('laravel-elixir-vue-2');
+gulp.task('css', () => {
+  const processors = [
+    cssImport(),
+    cssNext(),
+    options.production && cssnano({
+      autoprefixer: false
+    })
+  ].filter(Boolean)
 
-/*
- |--------------------------------------------------------------------------
- | Elixir Asset Management
- |--------------------------------------------------------------------------
- |
- | Elixir provides a clean, fluent API for defining some basic Gulp tasks
- | for your Laravel application. By default, we are compiling the Sass
- | file for our application, as well as publishing vendor resources.
- |
- */
+  return gulp.src('resources/assets/css/app.css')
+    .pipe(postcss(processors))
+    .pipe(gulp.dest('public/css/'))
+})
 
-elixir(mix => {
-    mix.sass('app.scss')
-       .webpack('app.js');
-});
+gulp.task('default', ['css'])
