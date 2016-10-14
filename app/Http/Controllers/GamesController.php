@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Storage;
 use Illuminate\Http\Request;
-use RecAnalyst\RecordedGame as RecAnalyst;
 
 use App\RecordedGame;
 use App\Http\Requests;
@@ -50,31 +49,9 @@ class GamesController extends Controller
 
         $filename = $file->getClientOriginalName();
 
-        // Attempt to generate a slug based on the players in the game. Fall back
-        // to a filename-based slug if the player data can't be extracted properly.
-        $defaultSlug = str_slug(substr($filename, 0, strrpos($filename, '.')));
-        try {
-            $rec = new RecAnalyst($tmpPath);
-
-            $teams = $rec->teams();
-            $teamSlug = implode(' VS ', array_map(function ($team) {
-                return implode(' ', array_column($team->players(), 'name'));
-            }, $teams));
-
-            if ($teamSlug) {
-                $defaultSlug = str_slug($teamSlug);
-            }
-        } catch (\Exception $e) {
-            // ¯\_(ツ)_/¯
-        }
-
-        // If this slug already exists, add some randomness in front so it's unique.'
-        $slug = $defaultSlug;
-        $attempts = 2;
-        while (RecordedGame::where('slug', $slug)->count() > 0) {
-            $slug = str_random($attempts) . '_' . $defaultSlug;
-            $attempts++;
-        }
+        do {
+            $slug = str_random(6);
+        } while (RecordedGame::where('slug', $slug)->count() > 0);
 
         // Save the recorded game file metadata.
         $model = new RecordedGame([
