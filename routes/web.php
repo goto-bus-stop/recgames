@@ -11,9 +11,7 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', 'GamesController@list');
 
 Route::get('/upload', 'GamesController@uploadForm');
 Route::post('/upload', 'GamesController@upload');

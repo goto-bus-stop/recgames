@@ -65,6 +65,14 @@ class GamesController extends Controller
         return redirect()->action('GamesController@show', $model->slug);
     }
 
+    public function list()
+    {
+        $recs = RecordedGame::orderBy('created_at', 'desc')->paginate(32);
+        return view('recorded_games_list', [
+            'recordings' => $recs,
+        ]);
+    }
+
     /**
      * Show data about a recorded game file.
      */
