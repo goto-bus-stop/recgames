@@ -3,5 +3,9 @@
 @section('title', 'main')
 
 @section('content')
-    <h1>Placeholder</h1>
+  <div class="hero">
+    <div class="container">
+      <h1>Placeholder</h1>
+    </div>
+  </div>
 @endsection

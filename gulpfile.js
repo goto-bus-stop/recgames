@@ -1,21 +1,31 @@
+const path = require('path')
 const gulp = require('gulp')
+const gulpif = require('gulp-if')
 const postcss = require('gulp-postcss')
 const cssnano = require('cssnano')
-const cssNext = require('postcss-cssnext')
-const cssImport = require('postcss-import')
+const scss = require('gulp-sass')
 const options = require('gulp-util').env
+const resolve = require('resolve')
 
 gulp.task('css', () => {
-  const processors = [
-    cssImport(),
-    cssNext(),
-    options.production && cssnano({
-      autoprefixer: false
-    })
-  ].filter(Boolean)
-
-  return gulp.src('resources/assets/css/app.css')
-    .pipe(postcss(processors))
+  return gulp.src('resources/assets/scss/app.scss')
+    .pipe(scss({
+      importer: (url, prev, done) => {
+        resolve(url, { basedir: path.dirname(prev) }, (err, result) => {
+          if (err) {
+            resolve(`./${url}`, { basedir: path.dirname(prev) }, (err, result) => {
+              if (err) done(err)
+              else done({ file: result })
+            })
+          } else {
+            done({ file: result })
+          }
+        })
+      }
+    }))
+    .pipe(gulpif(options.production,
+      postcss([ cssnano() ])
+    ))
     .pipe(gulp.dest('public/css/'))
 })
 

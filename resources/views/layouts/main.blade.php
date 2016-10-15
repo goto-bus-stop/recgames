@@ -1,28 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
+  <meta charset="utf-8">
 
-    <title>@yield('title') · recgam.es</title>
-    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+  <title>@yield('title') · recgam.es</title>
+  <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
 <body>
-    <div class="navbar-fixed">
-        <nav>
-            <div class="nav-wrapper container">
-                <a href="{{ url('/') }}" class="brand-logo">recgames</a>
-                <ul class="right">
-                    <li><a href="{{ url('/') }}">Games</a></li>
-                    <li><a class="waves-effect btn" href="{{ action('GamesController@upload') }}">
-                        Upload
-                    </a></li>
-                </ul>
-            </div>
-        </nav>
-    </div>
+  {{-- UI State --}}
+  <input id="s-menu-open" type="checkbox" class="is-hidden" name="{{ uniqid() }}">
 
+  <nav class="nav has-shadow">
     <div class="container">
-        @yield('content')
+      <div class="nav-left">
+        <a href="{{ url('/') }}" class="nav-item is-brand">
+          recgam.es
+        </a>
+      </div>
+
+      <label class="nav-toggle" for="s-menu-open">
+        <span></span>
+        <span></span>
+        <span></span>
+      </label>
+
+      <div class="nav-right nav-menu">
+        <a class="nav-item" href="{{ url('/') }}">Games</a>
+        <span class="nav-item">
+          <a class="button is-primary" href="{{ action('GamesController@upload') }}">
+            <span>Upload</span>
+          </a>
+        </span>
+      </ul>
     </div>
+  </nav>
+
+  @yield('content')
 </body>
 </html>
