@@ -59,7 +59,7 @@
                   </p>
                 </figure>
                 <div class="media-content">
-                  <strong class="title" style="color: {{ $player->color() }}">
+                  <strong class="title is-player-{{ $player->colorId }}">
                     {{ $player->name }}
                   </strong>
                   <p>{{ $player->civName() }}</p>
@@ -128,7 +128,7 @@
               {{ $helpers->formatGameTime($message->time) }}
             </span>
             @if ($message->player)
-              <span class="ChatMessage-sender" style="color: {{ $message->player->color() }}">
+              <span class="ChatMessage-sender is-player-{{ $message->player->colorId }}">
                 {{ $message->player->name }}
               </span>:
               {{ $message->msg }}

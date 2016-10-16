@@ -5,3 +5,19 @@
 #s-menu-open:checked + .nav .nav-menu {
     @extend .nav-menu.is-active;
 }
+
+$player-colors:
+    $blue,
+    $red,
+    $green,
+    $yellow,
+    $turquoise,
+    #dd0090,
+    $orange,
+    $grey;
+
+@for $i from 1 through length($player-colors) {
+    .is-player-#{$i - 1} {
+        color: nth($player-colors, $i) - #333333;
+    }
+}
