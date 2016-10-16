@@ -18,6 +18,8 @@ class CreateRecordedGamesTable extends Migration
             $table->string('slug')->unique();
             $table->string('filename');
             $table->string('path')->unique();
+            $table->enum('status', ['queued', 'processing', 'completed', 'errored'])
+                  ->default('queued');
             $table->timestamps();
         });
     }
