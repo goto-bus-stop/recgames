@@ -1,8 +1,5 @@
 @import "bulma";
-
-body {
-    font-family: $family-sans-serif;
-}
+@import "./tabs.scss";
 
 #s-menu-open:checked + .nav .nav-menu {
     @extend .nav-menu.is-active;

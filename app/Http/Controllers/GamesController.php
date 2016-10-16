@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use Storage;
 use Illuminate\Http\Request;
+use Illuminate\Contracts\Filesystem\Factory as Filesystem;
 
 use App\RecordedGame;
 use App\Http\Requests;
+use App\Jobs\RecAnalyzeJob;
 
 class GamesController extends Controller
 {
-    public function __construct()
+    public function __construct(Filesystem $fs)
     {
-        $this->fs = Storage::disk('local');
+        $this->fs = $fs->disk('local');
     }
 
     /**
@@ -34,11 +35,11 @@ class GamesController extends Controller
 
         $file = $request->file('recorded_game');
 
+        $storageName = $file->hashName();
         // Redirect to the analysis page if this exact file was uploaded
         // before.
-        $storagePath = 'recordings/' . $file->hashName();
-        if ($this->fs->exists($storagePath)) {
-            $rec = RecordedGame::where('path', $storagePath)->first();
+        if ($this->fs->exists('recordings/' . $storageName)) {
+            $rec = RecordedGame::where('path', $storageName)->first();
             if ($rec) {
                 return redirect()->action('GamesController@show', $rec->slug);
             }
@@ -61,6 +62,8 @@ class GamesController extends Controller
         ]);
 
         $model->save();
+
+        dispatch(new RecAnalyzeJob($model));
 
         return redirect()->action('GamesController@show', $model->slug);
     }
