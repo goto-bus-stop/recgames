@@ -93,7 +93,7 @@ class RecAnalyzeJob implements ShouldQueue
                 'team' => $player->team,
                 'color' => $player->colorId,
                 'civilization' => $player->civId,
-                'rating' => $player->rating ?: null,
+                'rating' => isset($player->rating) ? $player->rating : null,
             ]);
         }
 
