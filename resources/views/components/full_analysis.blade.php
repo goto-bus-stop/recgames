@@ -25,22 +25,30 @@
           <img src="{{ asset($mapPath) }}" alt="Minimap">
         </div>
         <div class="column" style="order: 1">
-          <dl>
-            <dt>Version</dt>
-            <dd>{{ $rec->version()->name }}</dd>
-
-            <dt>Duration</dt>
-            <dd>{{ $helpers->formatGameTime($rec->body()->duration) }}</dd>
-
-            <dt>Type</dt>
-            <dd>{{ $rec->gameSettings()->gameType }}</dd>
-
-            <dt>Map</dt>
-            <dd>{{ $rec->gameSettings()->mapName() }}</dd>
-
-            <dt>PoV</dt>
-            <dd>{{ $pov ? $pov->name : 'Unknown' }}</dd>
-          </dl>
+          <table class="table">
+            <tbody>
+              <tr>
+                <th>Version</th>
+                <td>{{ $rec->version()->name }}</td>
+              </tr>
+              <tr>
+                <th>Duration</th>
+                <td>{{ $helpers->formatGameTime($rec->body()->duration) }}</td>
+              </tr>
+              <tr>
+                <th>Type</th>
+                <td>{{ $rec->gameSettings()->gameType }}</td>
+              </tr>
+              <tr>
+                <th>Map</th>
+                <td>{{ $rec->gameSettings()->mapName() }}</td>
+              </tr>
+              <tr>
+                <th>PoV</th>
+                <td>{{ $pov ? $pov->name : 'Unknown' }}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
 
