@@ -9,7 +9,7 @@
     </div>
     <br>
     <div class="container">
-      <div class="columns is-multiline is-mobile">
+      <div class="columns is-multiline">
         @each('components.recorded_game_card', $recordings, 'rec')
       </div>
     </div>

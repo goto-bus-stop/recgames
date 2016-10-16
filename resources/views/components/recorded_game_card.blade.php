@@ -1,4 +1,4 @@
-<div class="column is-half-mobile is-quarter-tablet">
+<div class="column">
   <div class="card" style="margin: auto">
     <div class="card-image">
       <a href="{{ action('GamesController@show', $rec->slug) }}">
