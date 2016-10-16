@@ -4,6 +4,7 @@ const gulpif = require('gulp-if')
 const postcss = require('gulp-postcss')
 const cssnano = require('cssnano')
 const scss = require('gulp-sass')
+const watch = require('gulp-watch')
 const options = require('gulp-util').env
 const resolve = require('resolve')
 
@@ -27,6 +28,12 @@ gulp.task('css', () => {
       postcss([ cssnano() ])
     ))
     .pipe(gulp.dest('public/css/'))
+})
+
+gulp.task('watch', () => {
+  watch('resources/assets/scss/**/*.scss', () => {
+    gulp.start('css')
+  })
 })
 
 gulp.task('default', ['css'])
