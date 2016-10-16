@@ -36,6 +36,6 @@ class CreateRecordedGamePlayersTable extends Migration
      */
     public function down()
     {
-        //
+        Schema::drop('recorded_game_players');
     }
 }
