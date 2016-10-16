@@ -68,6 +68,8 @@
         selectTab(event.target)
       }, false)
     })
+
+    document.body.classList.add('js')
   </script>
 </body>
 </html>

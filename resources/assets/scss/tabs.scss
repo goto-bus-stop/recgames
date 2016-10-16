@@ -3,4 +3,8 @@
     &.is-active {
         display: block;
     }
+
+    body.js & .tab-title {
+        display: none;
+    }
 }
