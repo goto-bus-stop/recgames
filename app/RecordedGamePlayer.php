@@ -11,6 +11,9 @@ class RecordedGamePlayer extends Model
 
     public function analysis()
     {
-        return $this->belongsTo(RecordedGameAnalysis::class);
+        return $this->belongsTo(
+            RecordedGameAnalysis::class,
+            'recorded_game_analysis_id'
+        );
     }
 }
