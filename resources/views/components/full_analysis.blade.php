@@ -131,6 +131,8 @@
       <div class="Chat-ingame">
         <h3>In-game</h3>
         @foreach ($rec->body()->chatMessages as $message)
+          @continue($message->group === 'Rating')
+
           <div class="ChatMessage">
             <span class="ChatMessage-time">
               {{ $helpers->formatGameTime($message->time) }}
