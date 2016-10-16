@@ -1,5 +1,5 @@
 <div class="column is-half-mobile is-quarter-tablet">
-  <div class="card">
+  <div class="card" style="margin: auto">
     <div class="card-image">
       <a href="{{ action('GamesController@show', $rec->slug) }}">
         <figure class="image is-2by1">

@@ -83,6 +83,10 @@ class GamesController extends Controller
     {
         $rec = RecordedGame::where('slug', $slug)->first();
 
-        return $rec;
+        $html = $this->fs->get('analyses/' . $rec->slug . '.html');
+
+        return view('recorded_game_result', [
+            'html' => $html,
+        ]);
     }
 }
