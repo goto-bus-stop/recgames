@@ -8,8 +8,10 @@
       {{ $recordings->links() }}
     </div>
     <br>
-    <div class="container columns is-multiline is-mobile">
-      @each('components.recorded_game_card', $recordings, 'rec')
+    <div class="container">
+      <div class="columns is-multiline is-mobile">
+        @each('components.recorded_game_card', $recordings, 'rec')
+      </div>
     </div>
     <div class="container">
       {{ $recordings->links() }}
