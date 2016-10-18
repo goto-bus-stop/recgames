@@ -8,12 +8,12 @@
 
 $player-colors:
     $blue,
-    $red,
+    $red - #002,
     $green,
     $yellow,
     $turquoise,
-    #dd0090,
-    $orange,
+    #ff00cc,
+    $orange + #030,
     $grey;
 
 @for $i from 1 through length($player-colors) {
