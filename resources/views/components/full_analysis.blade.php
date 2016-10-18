@@ -29,7 +29,7 @@
             <tbody>
               <tr>
                 <th>Version</th>
-                <td>{{ $rec->version()->name }}</td>
+                <td>{{ $rec->version()->name() }}</td>
               </tr>
               <tr>
                 <th>Duration</th>
@@ -37,7 +37,7 @@
               </tr>
               <tr>
                 <th>Type</th>
-                <td>{{ $rec->gameSettings()->gameType }}</td>
+                <td>{{ $rec->gameSettings()->gameTypeName() }}</td>
               </tr>
               <tr>
                 <th>Map</th>
@@ -62,8 +62,8 @@
               <div class="media">
                 <figure class="media-left">
                   <p class="image">
-                    <img src="{{ $helpers->getCivImage($player->colorId, $player->civId) }}"
-                          alt="{{ $player->civName() }}">
+                    <img src="{{ asset('vendor/recanalyst/civs/' . $player->colorId . '/' . $player->civId . '.png') }}"
+                         alt="{{ $player->civName() }}">
                   </p>
                 </figure>
                 <div class="media-content">
@@ -90,8 +90,8 @@
               <div class="media">
                 <figure class="media-left">
                   <p class="image">
-                    <img src="{{ $helpers->getCivImage($player->colorId, $player->civId) }}"
-                          alt="{{ $player->civName() }}">
+                    <img src="{{ asset('vendor/recanalyst/civs/' . $player->colorId . '/' . $player->civId . '.png') }}"
+                         alt="{{ $player->civName() }}">
                   </p>
                 </figure>
                 <div class="media-content">
@@ -100,15 +100,15 @@
                       {{ $player->name }} ({{ $player->civName() }})
                     </span> <br>
                     <figure class="image is-16x16">
-                      <img src="{{ asset('../recanalyst/resources/researches/feudal_age.png') }}" alt="">
+                      <img src="{{ asset('vendor/recanalyst/researches/101.png') }}" alt="">
                     </figure>
                     Feudal: {{ $helpers->formatGameTime($player->getFeudalTime()) }} <br>
                     <figure class="image is-16x16">
-                      <img src="{{ asset('../recanalyst/resources/researches/castle_age.png') }}" alt="">
+                      <img src="{{ asset('vendor/recanalyst/researches/102.png') }}" alt="">
                     </figure>
                     Castle: {{ $helpers->formatGameTime($player->getCastleTime()) }} <br>
                     <figure class="image is-16x16">
-                      <img src="{{ asset('../recanalyst/resources/researches/imperial_age.png') }}" alt="">
+                      <img src="{{ asset('vendor/recanalyst/researches/103.png') }}" alt="">
                     </figure>
                     Imperial: {{ $helpers->formatGameTime($player->getImperialTime()) }}
                   </p>
@@ -154,9 +154,9 @@
       @foreach ($rec->players() as $player)
         <div class="row valign-wrapper">
           <div class="col s3 m2 l1">
-            <img src="{{ $helpers->getCivImage($player->colorId, $player->civId) }}"
-                  alt="{{ $player->civName() }}"
-                  class="circle">
+            <img src="{{ asset('vendor/recanalyst/civs/' . $player->colorId . '/' . $player->civId . '.png') }}"
+                 alt="{{ $player->civName() }}"
+                 class="circle">
             <p class="title">
               <strong>{{ $player->name }}</strong> <br>
               {{ $player->civName() }}
@@ -168,8 +168,8 @@
                 <div class="grey-text text-darken-3">
                   {{ $helpers->formatGameTime($research->time) }}
                 </div>
-                <img src="{{ $helpers->getResearchImage($research) }}">
-                <div>{{ $helpers->getResearchName($research) }}</div>
+                <img src="{{ asset('vendor/recanalyst/researches/' . $research->id . '.png') }}">
+                <div>{{ $research->name() }}</div>
               </div>
             @endforeach
           </div>

@@ -167,7 +167,7 @@ return [
          * Package Service Providers...
          */
 
-        //
+        RecAnalyst\Laravel\ServiceProvider::class,
 
         /*
          * Application Service Providers...
