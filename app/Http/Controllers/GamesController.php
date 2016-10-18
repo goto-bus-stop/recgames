@@ -89,4 +89,13 @@ class GamesController extends Controller
             'html' => $html,
         ]);
     }
+
+    public function download($slug)
+    {
+        $rec = RecordedGame::where('slug', $slug)->first();
+
+        $localPath = storage_path('app/' . $rec->path);
+
+        return response()->download($localPath, $rec->filename);
+    }
 }

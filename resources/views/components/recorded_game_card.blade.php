@@ -17,7 +17,7 @@
         {{ $rec->created_at->diffForHumans() }}
       </time>
       <a class="card-footer-item" href="{{ action('GamesController@show', $rec->slug) }}">View</a>
-      <a class="card-footer-item" href="{{ url('unimplemented') }}">Download</a>
+      <a class="card-footer-item" href="{{ action('GamesController@download', $rec->slug) }}">Download</a>
     </div>
   </div>
 </div>
