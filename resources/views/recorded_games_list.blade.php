@@ -10,7 +10,7 @@
     <br>
     <div class="container">
       <div class="columns is-multiline">
-        @each('components.recorded_game_card', $recordings, 'rec')
+        @each('components.recorded_game_card', $recordings, 'rec', 'components.no_results')
       </div>
     </div>
     <div class="container">
