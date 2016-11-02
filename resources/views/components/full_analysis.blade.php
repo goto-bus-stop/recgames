@@ -19,7 +19,7 @@
       </ul>
     </div>
     <div class="tab-panel is-active" id="general" role="tabpanel">
-      <h2 class="tab-title">General</h2>
+      <h2 class="tab-title title">General</h2>
       <div class="columns">
         <div class="column" style="order: 2">
           <img src="{{ asset($mapPath) }}" alt="Minimap">
@@ -56,7 +56,7 @@
         @foreach ($rec->teams() as $team)
           <div class="column is-half-tablet is-quarter-desktop">
             <header>
-              <h4>Team {{ $team->index() }}</h4>
+              <h4 class="subtitle">Team {{ $team->index() }}</h4>
             </header>
             @foreach ($team->players() as $player)
               <div class="media">
@@ -79,12 +79,12 @@
       </div>
     </div>
     <div class="tab-panel" id="advancing" role="tabpanel">
-      <h2 class="tab-title">Advancing</h2>
+      <h2 class="tab-title title">Advancing</h2>
       <div class="columns is-multiline">
         @foreach ($rec->teams() as $team)
           <div class="column is-half-tablet">
             <header>
-              <h4>Team {{ $team->index() }}</h4>
+              <h4 class="subtitle">Team {{ $team->index() }}</h4>
             </header>
             @foreach ($team->players() as $player)
               <div class="media">
@@ -120,8 +120,8 @@
       </div>
     </div>
     <div class="tab-panel" id="chat" role="tabpanel">
-      <h2 class="tab-title">Chat</h2>
-      <h3>Pre-game</h3>
+      <h2 class="tab-title title">Chat</h2>
+      <h3 class="subtitle">Pre-game</h3>
       @foreach ($rec->header()->pregameChat as $message)
         <div class="ChatMessage">
           <span class="ChatMessage-sender">{{ $message->player->name }}</span>:
@@ -129,7 +129,7 @@
         </div>
       @endforeach
       <div class="Chat-ingame">
-        <h3>In-game</h3>
+        <h3 class="subtitle">In-game</h3>
         @foreach ($rec->body()->chatMessages as $message)
           @continue($message->group === 'Rating')
 
