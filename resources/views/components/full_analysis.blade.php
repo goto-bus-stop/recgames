@@ -56,7 +56,7 @@
         @foreach ($rec->teams() as $team)
           <div class="column is-half-tablet is-quarter-desktop">
             <header>
-              <h4>Team {{ $team->index }}</h4>
+              <h4>Team {{ $team->index() }}</h4>
             </header>
             @foreach ($team->players() as $player)
               <div class="media">
@@ -84,7 +84,7 @@
         @foreach ($rec->teams() as $team)
           <div class="column is-half-tablet">
             <header>
-              <h4>Team {{ $team->index }}</h4>
+              <h4>Team {{ $team->index() }}</h4>
             </header>
             @foreach ($team->players() as $player)
               <div class="media">
@@ -102,15 +102,15 @@
                     <figure class="image is-16x16">
                       <img src="{{ asset('vendor/recanalyst/researches/101.png') }}" alt="">
                     </figure>
-                    Feudal: {{ $helpers->formatGameTime($player->getFeudalTime()) }} <br>
+                    Feudal: {{ $helpers->formatGameTime($player->feudalTime) }} <br>
                     <figure class="image is-16x16">
                       <img src="{{ asset('vendor/recanalyst/researches/102.png') }}" alt="">
                     </figure>
-                    Castle: {{ $helpers->formatGameTime($player->getCastleTime()) }} <br>
+                    Castle: {{ $helpers->formatGameTime($player->castleTime) }} <br>
                     <figure class="image is-16x16">
                       <img src="{{ asset('vendor/recanalyst/researches/103.png') }}" alt="">
                     </figure>
-                    Imperial: {{ $helpers->formatGameTime($player->getImperialTime()) }}
+                    Imperial: {{ $helpers->formatGameTime($player->imperialTime) }}
                   </p>
                 </div>
               </div>

@@ -16,10 +16,15 @@ class CreateRecordedGamesTable extends Migration
         Schema::create('recorded_games', function (Blueprint $table) {
             $table->increments('id');
             $table->string('slug')->unique();
-            $table->string('filename');
-            $table->string('path')->unique();
-            $table->enum('status', ['queued', 'processing', 'completed', 'errored'])
-                  ->default('queued');
+            $table->string('filename')->nullable();
+            $table->string('path')->unique()->nullable();
+            $table->enum('status', [
+                'new',
+                'queued',
+                'processing',
+                'completed',
+                'errored'
+            ])->default('new');
             $table->timestamps();
         });
     }

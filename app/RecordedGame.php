@@ -8,6 +8,14 @@ class RecordedGame extends Model
 {
     protected $fillable = ['slug', 'path', 'filename', 'status'];
 
+    public function generatedSlug()
+    {
+        while (!$this->slug || self::where('slug', $this->slug)->count() > 0) {
+            $this->slug = str_random(6);
+        }
+        return $this;
+    }
+
     public function getMinimapUrlAttribute()
     {
         return Storage::url('public/minimaps/' . $this->slug . '.png');
@@ -16,5 +24,13 @@ class RecordedGame extends Model
     public function analysis()
     {
         return $this->hasOne(RecordedGameAnalysis::class);
+    }
+
+    /**
+     *
+     */
+    public static function fromSlug($slug)
+    {
+        return self::where('slug', $slug)->first();
     }
 }
