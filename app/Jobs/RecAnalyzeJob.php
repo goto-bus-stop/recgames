@@ -104,7 +104,7 @@ class RecAnalyzeJob implements ShouldQueue
             'analysis' => $analysis,
             'rec' => $rec,
             'pov' => $pov,
-            'mapPath' => $disk->url('public/' . $mapPath),
+            'mapPath' => $this->model->minimap_url,
         ])->render();
 
         $disk->put('analyses/' . $this->model->slug . '.html', $html);

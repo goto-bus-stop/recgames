@@ -3,7 +3,7 @@
     <div class="card-image">
       <a href="{{ action('GamesController@show', $rec->slug) }}">
         <figure class="image is-2by1">
-          <img src="{{ asset(Storage::url('public/minimaps/' . $rec->slug . '.png')) }}" alt="">
+          <img src="{{ asset($rec->minimap_url) }}" alt="">
         </figure>
       </a>
     </div>
