@@ -1,10 +1,14 @@
 .tab-panel {
+    display: block;
+}
+
+body.js .tab-panel {
     display: none;
     &.is-active {
         display: block;
     }
 
-    body.js & .tab-title {
+    .tab-title {
         display: none;
     }
 }
