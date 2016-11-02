@@ -135,4 +135,18 @@ class GamesController extends Controller
             ],
         ], 404);
     }
+
+    /**
+     * Request a reanalysis of a recorded game.
+     */
+    public function reanalyze($slug)
+    {
+        $recordedGame = RecordedGame::fromSlug($slug);
+        if ($recordedGame) {
+            dispatch(new RecAnalyzeJob($recordedGame));
+            return [
+                'data' => [],
+            ];
+        }
+    }
 }

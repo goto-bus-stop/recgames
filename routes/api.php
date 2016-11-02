@@ -21,4 +21,5 @@ Route::group(['namespace' => 'API'], function () {
     Route::get('recorded-games/{id}', 'GamesController@show');
     Route::post('recorded-games/{id}/file', 'GamesController@upload');
     Route::get('recorded-games/{id}/file', 'GamesController@download');
+    Route::post('recorded-games/{id}/reanalyze', 'GamesController@reanalyze');
 });
