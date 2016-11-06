@@ -48,7 +48,9 @@ class RecAnalyzeJob implements ShouldQueue
         $fd = $disk->readStream($this->model->path);
         $rec = $recAnalyst->make($fd);
 
-        $mapImage = $rec->mapImage()->resize(
+        $mapImage = $rec->mapImage([
+            'showElevation' => true,
+        ])->resize(
             self::MAP_IMAGE_WIDTH,
             self::MAP_IMAGE_HEIGHT
         );
