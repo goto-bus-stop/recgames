@@ -92,20 +92,27 @@
                 </figure>
                 <div class="media-content">
                   <p>
-                    <span class="title">
-                      {{ $player->name }} ({{ $player->civName() }})
+                    <span class="title is-5">
+                      <span class="is-player-{{ $player->colorId }}">{{ $player->name }}</span>
+                      ({{ $player->civName() }})
                     </span> <br>
-                    <figure class="image is-16x16">
-                      <img src="{{ asset('vendor/recanalyst/researches/101.png') }}" alt="">
-                    </figure>
+                    <div class="is-inline-block">
+                      <figure class="image is-16x16">
+                        <img src="{{ asset('vendor/recanalyst/researches/101.png') }}" alt="">
+                      </figure>
+                    </div>
                     Feudal: {{ $helpers->formatGameTime($player->feudalTime) }} <br>
-                    <figure class="image is-16x16">
-                      <img src="{{ asset('vendor/recanalyst/researches/102.png') }}" alt="">
-                    </figure>
+                    <div class="is-inline-block">
+                      <figure class="image is-16x16">
+                        <img src="{{ asset('vendor/recanalyst/researches/102.png') }}" alt="">
+                      </figure>
+                    </div>
                     Castle: {{ $helpers->formatGameTime($player->castleTime) }} <br>
-                    <figure class="image is-16x16">
-                      <img src="{{ asset('vendor/recanalyst/researches/103.png') }}" alt="">
-                    </figure>
+                    <div class="is-inline-block">
+                      <figure class="image is-16x16">
+                        <img src="{{ asset('vendor/recanalyst/researches/103.png') }}" alt="">
+                      </figure>
+                    </div>
                     Imperial: {{ $helpers->formatGameTime($player->imperialTime) }}
                   </p>
                 </div>
