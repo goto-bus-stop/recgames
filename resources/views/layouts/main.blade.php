@@ -8,7 +8,7 @@
   <title>@yield('title') · recgam.es</title>
   <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
-<body>
+<body class="nojs">
   {{-- UI State --}}
   <input id="s-menu-open" type="checkbox" class="is-hidden" name="{{ uniqid() }}">
 
@@ -71,6 +71,7 @@
       }, false)
     })
 
+    document.body.classList.remove('nojs')
     document.body.classList.add('js')
   </script>
 </body>

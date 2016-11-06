@@ -1,5 +1,9 @@
 .tab-panel {
     display: block;
+    margin-bottom: 20px;
+    .tab-title {
+        padding-top: 30px;
+    }
 }
 
 body.js .tab-panel {

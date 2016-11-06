@@ -19,7 +19,7 @@
       </ul>
     </div>
     <div class="tab-panel is-active" id="general" role="tabpanel">
-      <h2 class="tab-title title">General</h2>
+      <h2 class="tab-title title nojs-hidden">General</h2>
       <div class="columns">
         <div class="column" style="order: 2">
           <img src="{{ asset($mapPath) }}" alt="Minimap">

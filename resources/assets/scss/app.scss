@@ -6,6 +6,12 @@
     @extend .nav-menu.is-active;
 }
 
+.nojs {
+    .nojs-hidden {
+        display: none;
+    }
+}
+
 $player-colors:
     $blue,
     $red - #002,
