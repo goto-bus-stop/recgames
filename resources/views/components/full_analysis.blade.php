@@ -117,16 +117,20 @@
     </div>
     <div class="tab-panel" id="chat" role="tabpanel">
       <h2 class="tab-title title">Chat</h2>
-      <h3 class="subtitle">Pre-game</h3>
-      @foreach ($rec->header()->pregameChat as $message)
-        <div class="ChatMessage">
-          <span class="ChatMessage-sender">{{ $message->player->name }}</span>:
-          {{ $message->msg }}
-        </div>
-      @endforeach
+      <div class="Chat-pregame">
+        <h3 class="subtitle">Pre-game</h3>
+        @forelse ($rec->header()->pregameChat as $message)
+          <div class="ChatMessage">
+            <span class="ChatMessage-sender">{{ $message->player->name }}</span>:
+            {{ $message->msg }}
+          </div>
+        @empty
+          <p>No chat messages.</p>
+        @endforelse
+      </div>
       <div class="Chat-ingame">
         <h3 class="subtitle">In-game</h3>
-        @foreach ($rec->body()->chatMessages as $message)
+        @forelse ($rec->body()->chatMessages as $message)
           @continue($message->group === 'Rating')
 
           <div class="ChatMessage">
@@ -142,7 +146,9 @@
               <em>{{ $message->msg }}</em>
             @endif
           </div>
-        @endforeach
+        @empty
+          <p>No chat messages.</p>
+        @endforelse
       </div>
     </div>
     <div class="tab-panel" id="researches" role="tabpanel">
