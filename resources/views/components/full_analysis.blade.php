@@ -55,9 +55,7 @@
       <div class="columns is-multiline">
         @foreach ($rec->teams() as $team)
           <div class="column is-half-tablet is-quarter-desktop">
-            <header>
-              <h4 class="subtitle">Team {{ $team->index() }}</h4>
-            </header>
+            <h4 class="subtitle">Team {{ $team->index() }}</h4>
             @foreach ($team->players() as $player)
               <div class="media">
                 <figure class="media-left">
@@ -83,9 +81,7 @@
       <div class="columns is-multiline">
         @foreach ($rec->teams() as $team)
           <div class="column is-half-tablet">
-            <header>
-              <h4 class="subtitle">Team {{ $team->index() }}</h4>
-            </header>
+            <h4 class="subtitle">Team {{ $team->index() }}</h4>
             @foreach ($team->players() as $player)
               <div class="media">
                 <figure class="media-left">
