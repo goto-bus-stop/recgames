@@ -32,6 +32,7 @@ class GamesController extends Controller
                 'type' => 'recorded-games',
                 'attributes' => [
                     'id' => $recordedGame->slug,
+                    'status' => $recordedGame->status,
                 ],
                 'relationships' => [],
                 'links' => [
@@ -53,7 +54,7 @@ class GamesController extends Controller
                 'attributes' => [
                     'id' => $id,
                     'filename' => $recordedGame->filename,
-
+                    'status' => $recordedGame->status,
                 ],
                 'links' => [
                     'self' => action('API\GamesController@show', $id),
