@@ -1,5 +1,6 @@
 const path = require('path')
 const gulp = require('gulp')
+const uglify = require('gulp-uglify')
 const gulpif = require('gulp-if')
 const postcss = require('gulp-postcss')
 const cssnano = require('cssnano')
@@ -52,7 +53,17 @@ gulp.task('js', () => {
       dest: './public/js/app.js',
       format: 'iife'
     })
+  }).then(() => {
+    if (options.production) {
+      gulp.start('js:min')
+    }
   })
+})
+
+gulp.task('js:min', () => {
+  return gulp.src('./public/js/app.js')
+    .pipe(uglify())
+    .pipe(gulp.dest('./public/js/'))
 })
 
 gulp.task('watch', () => {
