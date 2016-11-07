@@ -1,4 +1,3 @@
-import cx from 'classnames'
 import yo from 'yo-yo'
 import { select } from './util'
 
