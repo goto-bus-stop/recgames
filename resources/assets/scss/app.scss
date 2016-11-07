@@ -12,6 +12,12 @@
     }
 }
 
+.is-primary-text { color: $primary; }
+.is-info-text { color: $info; }
+.is-success-text { color: $success; }
+.is-warning-text { color: $warning; }
+.is-danger-text { color: $danger; }
+
 $player-colors:
     $blue,
     $red - #002,

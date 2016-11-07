@@ -41,7 +41,8 @@ gulp.task('js', () => {
     plugins: [
       buble({
         transforms: {
-          dangerousForOf: true
+          dangerousForOf: true,
+          dangerousTaggedTemplateString: true
         }
       }),
       nodeResolve(),

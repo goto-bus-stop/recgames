@@ -23,7 +23,7 @@
       {{ csrf_field() }}
       <label class="label">Recorded Game File</label>
       <p class="control">
-        <input class="input" type="file" name="recorded_game" id="upload-file">
+        <input class="input" type="file" name="recorded_game" id="upload-file" multiple>
       </p>
       <p class="control">
         <button class="button is-primary" type="submit" id="upload-button">
