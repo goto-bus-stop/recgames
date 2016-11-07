@@ -159,31 +159,32 @@
       </div>
     </div>
     <div class="tab-panel" id="researches" role="tabpanel">
-      <h2 class="tab-title">Researches</h2>
-      @foreach ($rec->players() as $player)
-        <div class="row valign-wrapper">
-          <div class="col s3 m2 l1">
-            <img src="{{ asset('vendor/recanalyst/civs/' . $player->colorId . '/' . $player->civId . '.png') }}"
-                 alt="{{ $player->civName() }}"
-                 class="circle">
-            <p class="title">
-              <strong>{{ $player->name }}</strong> <br>
-              {{ $player->civName() }}
-            </p>
-          </div>
-          <div class="col s9 m10 l11">
-            @foreach ($player->researches() as $research)
-              <div class="center-align left">
-                <div class="grey-text text-darken-3">
-                  {{ $helpers->formatGameTime($research->time) }}
-                </div>
-                <img src="{{ asset('vendor/recanalyst/researches/' . $research->id . '.png') }}">
-                <div>{{ $research->name() }}</div>
-              </div>
-            @endforeach
-          </div>
+      <h2 class="tab-title title">Researches</h2>
+      <div class="columns">
+        <div class="column is-narrow">
+          @foreach ($rec->players() as $player)
+            <div class="researches-row">
+              <img src="{{ asset('vendor/recanalyst/civs/' . $player->colorId . '/' . $player->civId . '.png') }}"
+                  alt="{{ $player->civName() }}"
+                  class="circle">
+              <p>
+                <strong>{{ $player->name }}</strong> <br>
+                {{ $player->civName() }}
+              </p>
+            </div>
+          @endforeach
         </div>
-      @endforeach
+        <div class="column" style=" overflow-x: scroll; white-space: nowrap ">
+          @foreach ($rec->players() as $player)
+            <div class="researches-row">
+              @foreach ($player->researches() as $research)
+                <img src="{{ asset('vendor/recanalyst/researches/' . $research->id . '.png') }}"
+                     title="{{ $research->name() }} ({{ $helpers->formatGameTime($research->time) }})">
+              @endforeach
+            </div>
+          @endforeach
+        </div>
+      </div>
     </div>
   </div>
 </section>
