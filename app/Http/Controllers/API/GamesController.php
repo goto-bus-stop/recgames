@@ -78,15 +78,30 @@ class GamesController extends Controller
             ], 400);
         }
 
-        $storageName = $file->hashName();
+        if ($file->getError() !== UPLOAD_ERR_OK) {
+            return response()->json([
+                'errors' => [
+                    [
+                        'code' => 'upload-error',
+                        'title' => $file->getErrorMessage(),
+                    ],
+                ],
+            ], 400);
+        }
+
+        $hash = md5_file($file->path());
+        $storageName = $hash . '.bin';
         // Redirect to the analysis page if this exact file was uploaded
         // before.
         if ($this->fs->exists('recordings/' . $storageName)) {
-            $rec = RecordedGame::where('path', $storageName)->first();
+            $rec = RecordedGame::where('path', 'recordings/' . $storageName)->first();
             if ($rec) {
+                $recordedGame->delete();
                 return response()->json([
                     'links' => [
+                        'download' => action('API\GamesController@download', $rec->slug),
                         'recorded-game' => action('API\GamesController@show', $rec->slug),
+                        'page' => action('GamesController@show', $rec->slug),
                     ],
                     'errors' => [
                         [
@@ -98,9 +113,8 @@ class GamesController extends Controller
             }
         }
 
-        $tmpPath = $file->path();
-        $path = $this->fs->putFile('recordings', $file);
         $filename = $file->getClientOriginalName();
+        $path = $this->fs->putFile('recordings', $file);
 
         $recordedGame->path = $path;
         $recordedGame->filename = $filename;
@@ -114,6 +128,7 @@ class GamesController extends Controller
             'links' => [
                 'download' => action('API\GamesController@download', $id),
                 'recorded-game' => action('API\GamesController@show', $id),
+                'page' => action('GamesController@show', $id),
             ],
             'data' => [],
         ], 200);
