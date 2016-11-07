@@ -7,6 +7,10 @@ const scss = require('gulp-sass')
 const watch = require('gulp-watch')
 const options = require('gulp-util').env
 const resolve = require('resolve')
+const rollup = require('rollup').rollup
+const buble = require('rollup-plugin-buble')
+const commonjs = require('rollup-plugin-commonjs')
+const nodeResolve = require('rollup-plugin-node-resolve')
 
 gulp.task('css', () => {
   return gulp.src('resources/assets/scss/app.scss')
@@ -30,10 +34,34 @@ gulp.task('css', () => {
     .pipe(gulp.dest('public/css/'))
 })
 
+gulp.task('js', () => {
+  return rollup({
+    entry: './resources/assets/js/app.js',
+    plugins: [
+      buble({
+        transforms: {
+          dangerousForOf: true
+        }
+      }),
+      nodeResolve(),
+      commonjs()
+    ]
+  }).then((bundle) => {
+    return bundle.write({
+      exports: 'none',
+      dest: './public/js/app.js',
+      format: 'iife'
+    })
+  })
+})
+
 gulp.task('watch', () => {
   watch('resources/assets/scss/**/*.scss', () => {
     gulp.start('css')
   })
+  watch('resources/assets/js/**/*.js', () => {
+    gulp.start('js')
+  })
 })
 
-gulp.task('default', ['css'])
+gulp.task('default', ['css', 'js'])

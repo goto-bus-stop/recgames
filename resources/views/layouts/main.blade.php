@@ -40,39 +40,12 @@
   @yield('content')
 
   <script>
-    function $ (sel, ctx) {
-      return [].slice.call((ctx || document).querySelectorAll(sel))
-    }
-    function deselectTabs (tablist) {
-      $('[role="tab"]', tablist).forEach(function (tabHref) {
-        var tab = tabHref.parentNode
-        var target = tabHref.getAttribute('href')
-        if (tab.classList.contains('is-active')) {
-          tab.classList.remove('is-active')
-          target && $(target).forEach(function (panel) {
-            panel.classList.remove('is-active')
-          })
-        }
-      })
-    }
-    function selectTab (tabHref) {
-      var tab = tabHref.parentNode
-      var target = tabHref.getAttribute('href')
-      tab.classList.add('is-active')
-      target && $(target).forEach(function (panel) {
-        panel.classList.add('is-active')
-      })
-    }
-
-    $('.tabs').forEach(function (tablist) {
-      tablist.addEventListener('click', function (event) {
-        deselectTabs(tablist)
-        selectTab(event.target)
-      }, false)
-    })
-
-    document.body.classList.remove('nojs')
-    document.body.classList.add('js')
+    recgames = {!!
+      json_encode([
+        'upload' => action('GamesController@upload'),
+      ])
+    !!}
   </script>
+  <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>

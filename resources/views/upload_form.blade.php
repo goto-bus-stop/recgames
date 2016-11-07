@@ -35,43 +35,4 @@
       </p>
     </form>
   </div>
-
-  <script>
-    function $ (sel, ctx) {
-      return [].slice.call((ctx || document).querySelectorAll(sel))
-    }
-    $('#upload-form').forEach(function (form) {
-      form.onsubmit = function (event) {
-        event.preventDefault()
-        $('#upload-button').forEach(function (button) {
-          button.classList.add('is-loading')
-          button.disabled = true
-        })
-
-        var progress = $('#upload-progress')[0]
-        var files = $('#upload-file')[0].files
-        progress.parentNode.classList.remove('is-hidden')
-
-        progress.max = 100
-
-        var formData = new FormData(form)
-
-        var uploadUrl = {!! json_encode(action('GamesController@upload')) !!}
-        var xhr = new XMLHttpRequest()
-        xhr.open('POST', uploadUrl)
-        xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
-        xhr.onload = onload
-        xhr.upload.onprogress = onprogress
-
-        xhr.send(formData)
-
-        function onprogress (event) {
-          progress.value = (event.loaded / event.total) * 100
-        }
-        function onload () {
-          window.location = JSON.parse(xhr.responseText).redirectUrl
-        }
-      }
-    })
-  </script>
 @endsection

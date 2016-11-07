@@ -1,20 +1,18 @@
+import 'es6-promise/auto'
+import 'whatwg-fetch'
 
-/**
- * First we will load all of this project's JavaScript dependencies which
- * include Vue and Vue Resource. This gives a great starting point for
- * building robust, powerful web applications using Vue and Laravel.
- */
+import { select } from './util'
 
-require('./bootstrap');
+import body from './body'
+import tabs from './tabs'
+import uploadForm from './upload-form'
 
-/**
- * Next, we will create a fresh Vue application instance and attach it to
- * the page. Then, you may begin adding components to this application
- * or customize the JavaScript scaffolding to fit your unique needs.
- */
+function enhance (selector, fn) {
+  for (const el of select(selector)) {
+    fn(el)
+  }
+}
 
-Vue.component('example', require('./components/Example.vue'));
-
-const app = new Vue({
-    el: '#app'
-});
+enhance('body', body)
+enhance('.tabs', tabs)
+enhance('#upload-form', uploadForm)
