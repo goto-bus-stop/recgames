@@ -65,9 +65,10 @@
                   </p>
                 </figure>
                 <div class="media-content">
-                  <strong class="title is-player-{{ $player->colorId }}">
+                  <a href="{{ action('GamesController@list', ['filter' => ['player' => $player->name]]) }}"
+                     class="title is-player-{{ $player->colorId }}">
                     {{ $player->name }}
-                  </strong>
+                  </a>
                   <p>{{ $player->civName() }}</p>
                 </div>
               </div>

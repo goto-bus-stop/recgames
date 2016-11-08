@@ -27,6 +27,20 @@ class RecordedGame extends Model
         return $this->hasOne(RecordedGameAnalysis::class);
     }
 
+    public function scopeMatchesPlayer($query, $likePlayer)
+    {
+        return $query->whereHas('analysis.players', function ($query) use (&$likePlayer) {
+            $query->where('name', 'like', $likePlayer);
+        });
+    }
+
+    public function scopeHasPlayer($query, $playerName)
+    {
+        return $query->whereHas('analysis.players', function ($query) use (&$playerName) {
+            $query->where('name', $playerName);
+        });
+    }
+
     /**
      *
      */
