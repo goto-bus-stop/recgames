@@ -6,6 +6,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 use App\Jobs\PurgeUnusedGamesJob;
+use App\Console\Commands\ReanalyzeCommand;
 
 class Kernel extends ConsoleKernel
 {
@@ -15,7 +16,7 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        //
+        ReanalyzeCommand::class,
     ];
 
     /**
