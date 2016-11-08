@@ -54,7 +54,7 @@ class Handler extends ExceptionHandler
                             'file' => $exception->getFile(),
                             'line' => $exception->getLine(),
                         ],
-                        'backtrace' => $exception->getTrace(),
+                        // 'backtrace' => $exception->getTrace(),
                     ],
                 ],
             ], 500);
