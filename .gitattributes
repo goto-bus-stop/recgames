@@ -1,3 +1,6 @@
 * text=auto
 *.css linguist-vendored
 *.scss linguist-vendored
+
+public/js/app.js binary
+public/css/app.css binary
