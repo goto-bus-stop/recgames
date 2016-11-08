@@ -39,6 +39,14 @@
 
   @yield('content')
 
+  <footer class="footer">
+    <div class="container">
+      <p class="has-text-centered">
+        recgam.es · <a href="https://github.com/goto-bus-stop/recgames">github</a>
+      </p>
+    </div>
+  </footer>
+
   <script>
     recgames = {!!
       json_encode([
