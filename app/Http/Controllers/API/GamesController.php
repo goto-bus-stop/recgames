@@ -8,6 +8,8 @@ use Illuminate\Contracts\Filesystem\Factory as Filesystem;
 use App\RecordedGame;
 use App\Jobs\RecAnalyzeJob;
 use App\Http\Controllers\Controller;
+use App\Exceptions\JsonApiException;
+use App\Exceptions\NotFoundException;
 
 class GamesController extends Controller
 {
@@ -69,25 +71,11 @@ class GamesController extends Controller
         $recordedGame = RecordedGame::fromSlug($slug);
         $file = $request->file('recorded_game');
         if (!$file) {
-            return response()->json([
-                'errors' => [
-                    [
-                        'code' => 'missing-file',
-                        'title' => 'Expected a file in the "recorded_game" field.',
-                    ],
-                ],
-            ], 400);
+            throw new JsonApiException('missing-file', 'Expected a file in the "recorded_game" field.', 400);
         }
 
         if ($file->getError() !== UPLOAD_ERR_OK) {
-            return response()->json([
-                'errors' => [
-                    [
-                        'code' => 'upload-error',
-                        'title' => $file->getErrorMessage(),
-                    ],
-                ],
-            ], 400);
+            throw new UploadException($file);
         }
 
         $hash = md5_file($file->path());
@@ -98,19 +86,12 @@ class GamesController extends Controller
             $rec = RecordedGame::where('path', 'recordings/' . $storageName)->first();
             if ($rec) {
                 $recordedGame->delete();
-                return response()->json([
-                    'links' => [
+                throw (new JsonApiException('file-exists', 'That file was already uploaded.', 400))
+                    ->links([
                         'download' => action('API\GamesController@download', $rec->slug),
                         'recorded-game' => action('API\GamesController@show', $rec->slug),
                         'page' => action('GamesController@show', $rec->slug),
-                    ],
-                    'errors' => [
-                        [
-                            'code' => 'file-exists',
-                            'title' => 'That file was already uploaded.',
-                        ]
-                    ],
-                ], 400);
+                    ]);
             }
         }
 
@@ -138,18 +119,12 @@ class GamesController extends Controller
     public function download($slug)
     {
         $recordedGame = RecordedGame::fromSlug($slug);
-        if ($recordedGame) {
-            return response($this->fs->read($recordedGame->path))
-                ->header('content-disposition', 'attachment; filename="' . urlencode($recordedGame->filename) . '"');
+        if (!$recordedGame) {
+            throw new NotFoundException('That recorded game does not exist.');
         }
-        return response()->json([
-            'errors' => [
-                [
-                    'code' => 'not-found',
-                    'title' => 'That recorded game does not exist.',
-                ],
-            ],
-        ], 404);
+
+        return response($this->fs->read($recordedGame->path))
+            ->header('content-disposition', 'attachment; filename="' . urlencode($recordedGame->filename) . '"');
     }
 
     /**
@@ -158,11 +133,13 @@ class GamesController extends Controller
     public function reanalyze($slug)
     {
         $recordedGame = RecordedGame::fromSlug($slug);
-        if ($recordedGame) {
-            dispatch(new RecAnalyzeJob($recordedGame));
-            return [
-                'data' => [],
-            ];
+        if (!$recordedGame) {
+            throw new NotFoundException('That recorded game does not exist.');
         }
+
+        dispatch(new RecAnalyzeJob($recordedGame));
+        return [
+            'data' => [],
+        ];
     }
 }

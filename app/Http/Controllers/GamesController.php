@@ -41,11 +41,6 @@ class GamesController extends Controller
         if ($this->fs->exists('recordings/' . $storageName)) {
             $rec = RecordedGame::where('path', $storageName)->first();
             if ($rec) {
-                if ($request->ajax()) {
-                    return [
-                        'redirectUrl' => action('GamesController@show', $rec->slug),
-                    ];
-                }
                 return redirect()->action('GamesController@show', $rec->slug);
             }
         }
@@ -70,11 +65,6 @@ class GamesController extends Controller
 
         dispatch(new RecAnalyzeJob($model));
 
-        if ($request->ajax()) {
-            return [
-                'redirectUrl' => action('GamesController@show', $model->slug),
-            ];
-        }
         return redirect()->action('GamesController@show', $model->slug);
     }
 
