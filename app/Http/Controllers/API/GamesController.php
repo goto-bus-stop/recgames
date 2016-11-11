@@ -119,7 +119,7 @@ class GamesController extends Controller
 
         $recordedGame->path = $path;
         $recordedGame->filename = $filename;
-        // $recordedGame->hash = sha1_file($tmpPath);
+        $recordedGame->hash = $hash;
         $recordedGame->save();
 
         dispatch(new RecAnalyzeJob($recordedGame));

@@ -18,6 +18,7 @@ class CreateRecordedGamesTable extends Migration
             $table->string('slug')->unique();
             $table->string('filename')->nullable();
             $table->string('path')->unique()->nullable();
+            $table->string('hash')->unique()->nullable();
             $table->enum('status', [
                 'new',
                 'queued',
