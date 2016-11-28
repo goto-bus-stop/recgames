@@ -11,6 +11,7 @@ const resolve = require('resolve')
 const rollup = require('rollup').rollup
 const buble = require('rollup-plugin-buble')
 const commonjs = require('rollup-plugin-commonjs')
+const replace = require('rollup-plugin-replace')
 const nodeResolve = require('rollup-plugin-node-resolve')
 
 gulp.task('css', () => {
@@ -43,10 +44,14 @@ gulp.task('js', () => {
         transforms: {
           dangerousForOf: true,
           dangerousTaggedTemplateString: true
-        }
+        },
+        objectAssign: 'Object.assign'
       }),
       nodeResolve(),
-      commonjs()
+      commonjs(),
+      replace({
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
+      })
     ]
   }).then((bundle) => {
     return bundle.write({
