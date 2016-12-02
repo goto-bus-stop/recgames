@@ -18,27 +18,4 @@ class BladeHelpersService
     {
         return RecAnalystUtils::formatGameTime($time);
     }
-
-    public function getCivImage($playerColorId, $civId)
-    {
-        $resourcePack = new AgeOfEmpires();
-        $civName = strtolower($resourcePack->getCivName($civId));
-        return asset('images/civilizations/' . $playerColorId . '/' . $civName . '.png');
-    }
-
-    public function getResearchImage($research)
-    {
-        $data = RecAnalystConst::$RESEARCHES[$research->id];
-        $path = base_path('../recanalyst/resources/researches/' . $data[1] . '.png');
-        if (is_file($path)) {
-            return $this->images->make($path)->encode('data-url') . '';
-        }
-        return '';
-    }
-
-    public function getResearchName($research)
-    {
-        $data = RecAnalystConst::$RESEARCHES[$research->id];
-        return $data[0];
-    }
 }
