@@ -50,16 +50,11 @@ class GamesController extends Controller
 
         $filename = $file->getClientOriginalName();
 
-        do {
-            $slug = str_random(6);
-        } while (RecordedGame::where('slug', $slug)->count() > 0);
-
         // Save the recorded game file metadata.
-        $model = new RecordedGame([
-            'slug' => $slug,
+        $model = (new RecordedGame([
             'path' => $path,
             'filename' => $filename,
-        ]);
+        ]))->generatedSlug();
 
         $model->save();
 
