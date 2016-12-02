@@ -68,11 +68,12 @@ class GamesController extends Controller
 
     public function upload(Request $request, $slug)
     {
+        $this->validate($request, [
+            'recorded_game' => 'required',
+        ]);
+
         $recordedGame = RecordedGame::fromSlug($slug);
         $file = $request->file('recorded_game');
-        if (!$file) {
-            throw new JsonApiException('missing-file', 'Expected a file in the "recorded_game" field.', 400);
-        }
 
         if ($file->getError() !== UPLOAD_ERR_OK) {
             throw new UploadException($file);
