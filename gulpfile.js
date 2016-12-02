@@ -18,9 +18,13 @@ gulp.task('css', () => {
   return gulp.src('resources/assets/scss/app.scss')
     .pipe(scss({
       importer: (url, prev, done) => {
-        resolve(url, { basedir: path.dirname(prev) }, (err, result) => {
+        const opts = {
+          basedir: path.dirname(prev),
+          extensions: [ '.sass', '.scss', '.css' ]
+        }
+        resolve(url, opts, (err, result) => {
           if (err) {
-            resolve(`./${url}`, { basedir: path.dirname(prev) }, (err, result) => {
+            resolve(`./${url}`, opts, (err, result) => {
               if (err) done(err)
               else done({ file: result })
             })
