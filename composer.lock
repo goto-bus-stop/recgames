@@ -859,16 +859,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v2.0.3",
+            "version": "v2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "c0125896dbb151380ab47e96c621741e79623beb"
+                "reference": "a9b97968bcde1c4de2a5ec6cbd06a0f6c919b46e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/c0125896dbb151380ab47e96c621741e79623beb",
-                "reference": "c0125896dbb151380ab47e96c621741e79623beb",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/a9b97968bcde1c4de2a5ec6cbd06a0f6c919b46e",
+                "reference": "a9b97968bcde1c4de2a5ec6cbd06a0f6c919b46e",
                 "shasum": ""
             },
             "require": {
@@ -903,7 +903,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2016-10-17 15:23:22"
+            "time": "2016-11-07 23:38:38"
         },
         {
             "name": "psr/http-message",
@@ -1156,16 +1156,16 @@
         },
         {
             "name": "recanalyst/recanalyst",
-            "version": "4.0.2",
+            "version": "4.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/goto-bus-stop/recanalyst.git",
-                "reference": "cc43681fc349f9ce145cbdd07c522e37d3633cb0"
+                "reference": "66b4684783b8e588d3b3147e3030435e9bcdda89"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/goto-bus-stop/recanalyst/zipball/cc43681fc349f9ce145cbdd07c522e37d3633cb0",
-                "reference": "cc43681fc349f9ce145cbdd07c522e37d3633cb0",
+                "url": "https://api.github.com/repos/goto-bus-stop/recanalyst/zipball/66b4684783b8e588d3b3147e3030435e9bcdda89",
+                "reference": "66b4684783b8e588d3b3147e3030435e9bcdda89",
                 "shasum": ""
             },
             "require": {
@@ -1203,7 +1203,7 @@
             ],
             "description": "Analyzes Age of Empires 2 recorded game files.",
             "homepage": "http://idlebeaver.ninja/recanalyst",
-            "time": "2016-11-06 18:43:04"
+            "time": "2016-11-12 12:52:12"
         },
         {
             "name": "swiftmailer/swiftmailer",
