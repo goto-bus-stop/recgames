@@ -10,15 +10,23 @@
         <p>
           <strong>Map</strong>
           {{ $rec->analysis->map_name }}
+          <strong>Size</strong>
+          @lang('recanalyst::ageofempires.map_sizes.' . $rec->analysis->map_size)
         </p>
         <p><strong>Players</strong></p>
-        @foreach ($rec->analysis->players as $player)
-          @include('components.player_badge', [
-            'name' => $player->name,
-            'civilization' => $player->civilization,
-            'color' => $player->color,
-          ])
-        @endforeach
+        <div class="columns">
+          @foreach ($rec->analysis->players->groupBy('team') as $team)
+            <div class="column">
+              @foreach ($team as $player)
+                @include('components.player_badge', [
+                  'name' => $player->name,
+                  'civilization' => $player->civilization,
+                  'color' => $player->color,
+                ])
+              @endforeach
+            </div>
+          @endforeach
+        </div>
       </div>
     </div>
     <div class="card-content">

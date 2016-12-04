@@ -5,15 +5,15 @@
     left: 0; right: 0;
     padding: 10px 20px;
 
-    .card-image & {
+    .card & {
         display: none;
     }
-    .card-image:hover & {
+    .card:hover & {
         display: block;
     }
 }
 
-.player-badge {
+.tag.player-badge {
     overflow: hidden;
     padding-left: 0;
 
