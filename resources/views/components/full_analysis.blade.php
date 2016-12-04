@@ -17,6 +17,11 @@
           <a href="#researches" aria-controls="researches" role="tab">Researches</a>
         </li>
       </ul>
+      <ul class="is-right">
+        <li role="presentation">
+          <a href="{{ action('GamesController@download', $model->slug) }}">Download</a>
+        </li>
+      </ul>
     </div>
     <div class="tab-panel is-active" id="general" role="tabpanel">
       <h2 class="tab-title title nojs-hidden">General</h2>
