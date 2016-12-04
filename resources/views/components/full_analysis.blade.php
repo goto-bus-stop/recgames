@@ -47,11 +47,13 @@
                 <th>PoV</th>
                 <td>
                   @if ($pov)
-                    @include('components.player_badge', [
-                      'name' => $pov->name,
-                      'civilization' => $pov->civId,
-                      'color' => $pov->colorId,
-                    ])
+                    <a href="{{ action('GamesController@list', ['filter' => ['player' => $pov->name]]) }}">
+                      @include('components.player_badge', [
+                        'name' => $pov->name,
+                        'civilization' => $pov->civId,
+                        'color' => $pov->colorId,
+                      ])
+                    </a>
                   @endif
                 </td>
               </tr>
