@@ -3,16 +3,18 @@
 namespace App\Jobs;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Contracts\Filesystem\Factory as Filesystem;
+use Illuminate\Queue\{SerializesModels, InteractsWithQueue};
+use Elasticsearch\ClientBuilder;
 
-use App\RecordedGame;
-use App\RecordedGamePlayer;
-use App\RecordedGameAnalysis;
-use App\Services\RecAnalystManager;
+use App\{
+    RecordedGame,
+    RecordedGamePlayer,
+    RecordedGameAnalysis,
+    Services\RecAnalystManager
+};
 
 class RecAnalyzeJob implements ShouldQueue
 {

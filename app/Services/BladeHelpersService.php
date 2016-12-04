@@ -3,9 +3,7 @@
 namespace App\Services;
 
 use RecAnalyst\Utils as RecAnalystUtils;
-use RecAnalyst\RecAnalystConst;
 use Intervention\Image\ImageManager;
-use RecAnalyst\ResourcePacks\AgeOfEmpires;
 
 class BladeHelpersService
 {
@@ -14,7 +12,7 @@ class BladeHelpersService
         $this->images = $images;
     }
 
-    public function formatGameTime($time)
+    public function formatGameTime(int $time): string
     {
         return RecAnalystUtils::formatGameTime($time);
     }

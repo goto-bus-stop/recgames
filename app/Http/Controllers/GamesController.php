@@ -83,7 +83,7 @@ class GamesController extends Controller
     /**
      * Show data about a recorded game file.
      */
-    public function show(Request $request, $slug)
+    public function show(Request $request, string $slug)
     {
         $rec = RecordedGame::where('slug', $slug)->first();
 

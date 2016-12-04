@@ -45,7 +45,7 @@ class GamesController extends Controller
         ], 200);
     }
 
-    public function show($slug)
+    public function show(string $slug)
     {
         $recordedGame = RecordedGame::fromSlug($slug);
         $id = $recordedGame->slug;
@@ -66,7 +66,7 @@ class GamesController extends Controller
         ], 200);
     }
 
-    public function upload(Request $request, $slug)
+    public function upload(Request $request, string $slug)
     {
         $this->validate($request, [
             'recorded_game' => 'required',
@@ -117,7 +117,7 @@ class GamesController extends Controller
         ], 200);
     }
 
-    public function download($slug)
+    public function download(string $slug)
     {
         $recordedGame = RecordedGame::fromSlug($slug);
         if (!$recordedGame) {
@@ -131,7 +131,7 @@ class GamesController extends Controller
     /**
      * Request a reanalysis of a recorded game.
      */
-    public function reanalyze($slug)
+    public function reanalyze(string $slug)
     {
         $recordedGame = RecordedGame::fromSlug($slug);
         if (!$recordedGame) {
