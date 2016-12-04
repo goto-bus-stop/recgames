@@ -58,7 +58,7 @@ class GamesController extends Controller
 
         $model->save();
 
-        dispatch(new RecAnalyzeJob($model));
+        dispatch(RecAnalyzeJob::uploaded($model));
 
         return redirect()->action('GamesController@show', $model->slug);
     }
@@ -95,6 +95,16 @@ class GamesController extends Controller
     public function show(Request $request, string $slug)
     {
         $rec = RecordedGame::where('slug', $slug)->first();
+
+        if ($rec->status === 'errored') {
+            return view('recorded_game_error', [
+                'rec' => $rec,
+            ]);
+        } else if ($rec->status !== 'completed') {
+            return view('recorded_game_status', [
+                'rec' => $rec,
+            ]);
+        }
 
         $html = $this->fs->get('analyses/' . $rec->slug . '.html');
 
