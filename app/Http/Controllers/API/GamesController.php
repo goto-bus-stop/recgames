@@ -104,7 +104,7 @@ class GamesController extends Controller
         $recordedGame->hash = $hash;
         $recordedGame->save();
 
-        dispatch(new RecAnalyzeJob($recordedGame));
+        dispatch(RecAnalyzeJob::uploaded($recordedGame));
 
         $id = $recordedGame->slug;
         return response()->json([
@@ -138,7 +138,8 @@ class GamesController extends Controller
             throw new NotFoundException('That recorded game does not exist.');
         }
 
-        dispatch(new RecAnalyzeJob($recordedGame));
+        dispatch(RecAnalyzeJob::reanalyze($recordedGame));
+
         return [
             'data' => [],
         ];

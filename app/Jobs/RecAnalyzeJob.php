@@ -9,6 +9,12 @@ use Illuminate\Contracts\Filesystem\Factory as Filesystem;
 use Illuminate\Queue\{SerializesModels, InteractsWithQueue};
 use Elasticsearch\ClientBuilder;
 
+use RecAnalyst\Model\{
+    ChatMessage,
+    Player,
+    Research
+};
+
 use App\{
     RecordedGame,
     RecordedGamePlayer,
@@ -20,10 +26,12 @@ class RecAnalyzeJob implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
 
+    const ANALYZE_VERSION = 1;
     const MAP_IMAGE_WIDTH = 400;
     const MAP_IMAGE_HEIGHT = 200;
 
     protected $model;
+    protected $analyzer;
 
     /**
      * Create a new job instance.
@@ -48,7 +56,8 @@ class RecAnalyzeJob implements ShouldQueue
         $this->model->save();
 
         $fd = $disk->readStream($this->model->path);
-        $rec = $recAnalyst->make($fd);
+        $this->analyzer = $recAnalyst->make($fd);
+        $rec = $this->analyzer;
 
         $mapImage = $rec->mapImage([
             'showElevation' => true,
@@ -115,5 +124,24 @@ class RecAnalyzeJob implements ShouldQueue
 
         $this->model->status = 'completed';
         $this->model->save();
+    }
+
+    /**
+     * Create a recanalyze job for a game that was just uploaded.
+     */
+    public static function uploaded(RecordedGame $recordedGame): ShouldQueue
+    {
+        $job = new self($recordedGame);
+        return $job->onQueue('upload');
+    }
+
+    /**
+     * Create a recanalyze job for a game that should be analyzed again.
+     * "reanalyze" jobs have a lower priority than new uploads.
+     */
+    public static function reanalyze(RecordedGame $recordedGame): ShouldQueue
+    {
+        $job = new self($recordedGame);
+        return $job->onQueue('reanalyze');
     }
 }

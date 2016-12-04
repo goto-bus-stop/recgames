@@ -41,7 +41,7 @@ class ReanalyzeCommand extends Command
     public function handle()
     {
         foreach (RecordedGame::cursor() as $game) {
-            dispatch(new RecAnalyzeJob($game));
+            dispatch(RecAnalyzeJob::reanalyze($game));
         }
     }
 }
