@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use Exception;
 use Illuminate\Bus\Queueable;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -123,6 +124,12 @@ class RecAnalyzeJob implements ShouldQueue
         $disk->put('analyses/' . $this->model->slug . '.html', $html);
 
         $this->model->status = 'completed';
+        $this->model->save();
+    }
+
+    public function failed(Exception $e)
+    {
+        $this->model->status = 'errored';
         $this->model->save();
     }
 
