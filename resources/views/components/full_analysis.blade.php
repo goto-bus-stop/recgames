@@ -45,7 +45,15 @@
               </tr>
               <tr>
                 <th>PoV</th>
-                <td>{{ $pov ? $pov->name : 'Unknown' }}</td>
+                <td>
+                  @if ($pov)
+                    @include('components.player_badge', [
+                      'name' => $pov->name,
+                      'civilization' => $pov->civId,
+                      'color' => $pov->colorId,
+                    ])
+                  @endif
+                </td>
               </tr>
             </tbody>
           </table>

@@ -1,6 +1,7 @@
 @import "bulma";
 @import "./navs.scss";
 @import "./tabs.scss";
+@import "./player-badge.scss";
 
 #s-menu-open:checked + .nav .nav-menu {
     @extend .nav-menu.is-active;
@@ -31,5 +32,10 @@ $player-colors:
 @for $i from 1 through length($player-colors) {
     .is-player-#{$i - 1} {
         color: nth($player-colors, $i) - #333333;
+    }
+    .is-player-#{$i - 1}-bg {
+        $color: nth($player-colors, $i) - #333333;
+        background-color: $color;
+        color: findColorInvert($color);
     }
 }

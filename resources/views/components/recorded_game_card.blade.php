@@ -6,6 +6,20 @@
           <img src="{{ asset($rec->minimap_url) }}" alt="">
         </figure>
       </a>
+      <div class="card-hover-data">
+        <p>
+          <strong>Map</strong>
+          {{ $rec->analysis->map_name }}
+        </p>
+        <p><strong>Players</strong></p>
+        @foreach ($rec->analysis->players as $player)
+          @include('components.player_badge', [
+            'name' => $player->name,
+            'civilization' => $player->civilization,
+            'color' => $player->color,
+          ])
+        @endforeach
+      </div>
     </div>
     <div class="card-content">
       <p>{{ $rec->filename }}</p>

@@ -17,4 +17,9 @@ class RecordedGameAnalysis extends Model
     {
         return $this->hasMany(RecordedGamePlayer::class);
     }
+
+    public function getMapNameAttribute()
+    {
+        return trans('recanalyst::ageofempires.map_names.' . $this->map_id);
+    }
 }

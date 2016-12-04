@@ -17,7 +17,7 @@ class RecAnalystManager
     /**
      *
      */
-    public function make(string $filename, string $diskName = 'local')
+    public function make($filename, string $diskName = 'local')
     {
         return new RecordedGame($filename);
     }

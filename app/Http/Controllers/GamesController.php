@@ -67,6 +67,15 @@ class GamesController extends Controller
     {
         $recs = RecordedGame::where('status', 'completed')->orderBy('created_at', 'desc');
 
+        $recs->with([
+            'analysis',
+            'analysis.players' => function ($query) {
+                return $query
+                    ->orderBy('team', 'asc')
+                    ->where('type', '!=', 'spectator');
+            }
+        ]);
+
         $filter = $request->input('filter');
 
         if (isset($filter['player'])) {
