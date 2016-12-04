@@ -24,7 +24,8 @@ class RecordedGame extends Model
 
     public function analysis()
     {
-        return $this->hasOne(RecordedGameAnalysis::class);
+        return $this->hasOne(RecordedGameAnalysis::class)
+            ->orderBy('created_at', 'desc');
     }
 
     public function scopeMatchesPlayer($query, $likePlayer)
