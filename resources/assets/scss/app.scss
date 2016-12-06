@@ -4,6 +4,7 @@
 @import "./card.scss";
 @import "./PlayerBadge.scss";
 @import "./PlayerResearches.scss";
+@import "./util.scss";
 
 #s-menu-open:checked + .nav .nav-menu {
     @extend .nav-menu.is-active;
@@ -12,32 +13,5 @@
 .nojs {
     .nojs-hidden {
         display: none;
-    }
-}
-
-.is-primary-text { color: $primary; }
-.is-info-text { color: $info; }
-.is-success-text { color: $success; }
-.is-warning-text { color: $warning; }
-.is-danger-text { color: $danger; }
-
-$player-colors:
-    $blue,
-    $red - #002,
-    $green,
-    $yellow,
-    $turquoise,
-    #ff00cc,
-    $orange + #030,
-    $grey;
-
-@for $i from 1 through length($player-colors) {
-    .is-player-#{$i - 1} {
-        color: nth($player-colors, $i) - #333333;
-    }
-    .is-player-#{$i - 1}-bg {
-        $color: nth($player-colors, $i) - #333333;
-        background-color: $color;
-        color: findColorInvert($color);
     }
 }
