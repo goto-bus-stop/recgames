@@ -22,18 +22,3 @@
         transform: scale(1);
     }
 }
-
-.tag.player-badge {
-    overflow: hidden;
-    padding-left: 0;
-
-    & .civ-icon {
-        height: 100%;
-        margin-right: 5px;
-    }
-
-    &:hover {
-        color: $white;
-        background-image: linear-gradient(0deg, fade-out($black, 0.9), fade-out($black, 0.9))
-    }
-}
