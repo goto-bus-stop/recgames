@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('title', 'Recorded Game')
+@section('title', $title)
 
 @section('content')
     {!! $html !!}

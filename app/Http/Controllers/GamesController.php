@@ -108,12 +108,23 @@ class GamesController extends Controller
 
         $html = $this->fs->get('analyses/' . $rec->slug . '.html');
 
+        $title = $rec->analysis->players
+            ->reject(function ($player) { return $player->type === 'spectator'; })
+            ->groupBy(function ($player) {
+                return $player->team ?: uniqid();
+            })
+            ->map(function ($team, $key) {
+                return $team->pluck('name')->implode(', ');
+            })
+            ->implode(' VS ');
+
         return view('recorded_game_result', [
+            'title' => $title,
             'html' => $html,
         ]);
     }
 
-    public function download($slug)
+    public function download(string $slug)
     {
         $rec = RecordedGame::where('slug', $slug)->first();
 
