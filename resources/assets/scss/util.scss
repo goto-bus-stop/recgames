@@ -1,8 +1,15 @@
-.is-primary-text { color: $primary; }
-.is-info-text { color: $info; }
-.is-success-text { color: $success; }
-.is-warning-text { color: $warning; }
-.is-danger-text { color: $danger; }
+/**
+ * Text colour helpers.
+ */
+@each $name, $pair in $colors {
+    .is-#{$name}-text {
+        color: nth($pair, 1);
+    }
+}
+
+/**
+ * Player colour helpers.
+ */
 
 $player-colors:
     $blue,

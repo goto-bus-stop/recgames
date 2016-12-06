@@ -1,7 +1,7 @@
 @import "./bulma";
+@import "./util.scss";
 @import "./PlayerBadge.scss";
 @import "./PlayerResearches.scss";
-@import "./util.scss";
 
 #s-menu-open:checked + .nav .nav-menu {
     @extend .nav-menu.is-active;
