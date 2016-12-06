@@ -142,7 +142,7 @@
     </div>
     <div class="tab-panel" id="chat" role="tabpanel">
       <h2 class="tab-title title">Chat</h2>
-      <div class="Chat-pregame">
+      <div class="Chat-pregame" style="margin-bottom: 20px">
         <h3 class="subtitle">Pre-game</h3>
         @forelse ($rec->header()->pregameChat as $message)
           <div class="ChatMessage">
@@ -150,7 +150,7 @@
             {{ $message->msg }}
           </div>
         @empty
-          <p>No chat messages.</p>
+          <p class="notification">No chat messages.</p>
         @endforelse
       </div>
       <div class="Chat-ingame">
@@ -172,7 +172,7 @@
             @endif
           </div>
         @empty
-          <p>No chat messages.</p>
+          <p class="notification">No chat messages.</p>
         @endforelse
       </div>
     </div>
