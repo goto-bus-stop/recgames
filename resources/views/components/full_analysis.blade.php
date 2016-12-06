@@ -76,7 +76,8 @@
                 <figure class="media-left">
                   <p class="image">
                     <img src="{{ asset('vendor/recanalyst/civs/' . $player->colorId . '/' . $player->civId . '.png') }}"
-                         alt="{{ $player->civName() }}">
+                         alt="{{ $player->civName() }}"
+                         title="{{ $player->civName() }}">
                   </p>
                 </figure>
                 <div class="media-content">
@@ -103,7 +104,8 @@
                 <figure class="media-left">
                   <p class="image">
                     <img src="{{ asset('vendor/recanalyst/civs/' . $player->colorId . '/' . $player->civId . '.png') }}"
-                         alt="{{ $player->civName() }}">
+                         alt="{{ $player->civName() }}"
+                         title="{{ $player->civName() }}">
                   </p>
                 </figure>
                 <div class="media-content">
