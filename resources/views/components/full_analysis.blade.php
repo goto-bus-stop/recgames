@@ -178,31 +178,9 @@
     </div>
     <div class="tab-panel" id="researches" role="tabpanel">
       <h2 class="tab-title title">Researches</h2>
-      <div class="columns">
-        <div class="column is-narrow">
-          @foreach ($rec->players() as $player)
-            <div class="researches-row">
-              <img src="{{ asset('vendor/recanalyst/civs/' . $player->colorId . '/' . $player->civId . '.png') }}"
-                  alt="{{ $player->civName() }}"
-                  class="circle">
-              <p>
-                <strong>{{ $player->name }}</strong> <br>
-                {{ $player->civName() }}
-              </p>
-            </div>
-          @endforeach
-        </div>
-        <div class="column" style=" overflow-x: scroll; white-space: nowrap ">
-          @foreach ($rec->players() as $player)
-            <div class="researches-row">
-              @foreach ($player->researches() as $research)
-                <img src="{{ asset('vendor/recanalyst/researches/' . $research->id . '.png') }}"
-                     title="{{ $research->name() }} ({{ $helpers->formatGameTime($research->time) }})">
-              @endforeach
-            </div>
-          @endforeach
-        </div>
-      </div>
+      @include('components.researches_table', [
+        'players' => $rec->players(),
+      ])
     </div>
   </div>
 </section>

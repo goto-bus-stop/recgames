@@ -1,0 +1,48 @@
+$research-row-size: 36px;
+$research-border-color: $grey-light;
+
+.PlayerResearches {
+    &-players {
+        float: left;
+        border-top: 1px solid $research-border-color;
+    }
+    &-player {
+        height: $research-row-size + 1px;
+        display: flex;
+        align-items: center;
+        border-bottom: 1px solid $research-border-color;
+        padding-right: 10px;
+    }
+    &-civ {
+        margin-right: 5px;
+    }
+
+    &-scrollable {
+        overflow-x: scroll;
+    }
+
+    &-researches {
+    }
+    &-row {
+        height: $research-row-size;
+    }
+
+    &-minute {
+        font-size: 0;
+        border: 1px solid $research-border-color;
+        white-space: nowrap;
+    }
+    &-research {
+        width: $research-row-size;
+        max-width: $research-row-size;
+        height: $research-row-size;
+        display: inline-block;
+    }
+
+    &-timeRow {
+        border-bottom: 0;
+    }
+    &-time {
+        text-align: center;
+    }
+}

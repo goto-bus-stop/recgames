@@ -2,6 +2,7 @@
 @import "./navs.scss";
 @import "./tabs.scss";
 @import "./player-badge.scss";
+@import "./PlayerResearches.scss";
 
 #s-menu-open:checked + .nav .nav-menu {
     @extend .nav-menu.is-active;
