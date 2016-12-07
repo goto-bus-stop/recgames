@@ -10,6 +10,11 @@
         <li role="presentation">
           <a href="#advancing" aria-controls="advancing" role="tab">Advancing</a>
         </li>
+        @if ($achievements)
+          <li role="presentation">
+            <a href="#achievements" aria-controls="achievements" role="tab">Achievements</a>
+          </li>
+        @endif
         <li role="presentation">
           <a href="#chat" aria-controls="chat" role="tab">Chat</a>
         </li>
@@ -140,6 +145,16 @@
         @endforeach
       </div>
     </div>
+
+    @if ($achievements)
+      <div class="tab-panel" id="achievements" role="tabpanel">
+        <h2 class="tab-title title">Achievements</h2>
+        @include('components.achievements_tabs', [
+          'id' => 'achievements',
+          'players' => $rec->players(),
+        ])
+      </div>
+    @endif
     <div class="tab-panel" id="chat" role="tabpanel">
       <h2 class="tab-title title">Chat</h2>
       <div class="Chat-pregame" style="margin-bottom: 20px">

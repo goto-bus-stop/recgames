@@ -115,6 +115,7 @@ class RecAnalyzeJob implements ShouldQueue
 
         $html = view('components.full_analysis', [
             'model' => $this->model,
+            'achievements' => !!$rec->achievements(),
             'analysis' => $analysis,
             'rec' => $rec,
             'pov' => $pov,
