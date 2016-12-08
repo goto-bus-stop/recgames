@@ -86,7 +86,9 @@ class RecAnalyzeJob implements ShouldQueue
         }
 
         $analysis = $this->model->analysis()->create([
-            'version' => $rec->version()->version,
+            'analysis_version' => config('recgames.analysis_version'),
+            'game_version' => $rec->version()->version,
+            'game_subversion' => $rec->version()->subVersion,
             'duration' => $rec->body()->duration,
             'game_type' => $rec->gameSettings()->gameType,
             'multiplayer' => true,

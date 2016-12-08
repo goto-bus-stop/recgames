@@ -106,6 +106,10 @@ class GamesController extends Controller
             ]);
         }
 
+        if ($rec->analysis->isOutdated()) {
+            dispatch(RecAnalyzeJob::reanalyze($rec));
+        }
+
         $html = $this->fs->get('analyses/' . $rec->slug . '.html');
 
         $title = $rec->analysis->players

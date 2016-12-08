@@ -8,6 +8,11 @@ class RecordedGameAnalysis extends Model
 {
     protected $guarded = [];
 
+    public function isOutdated()
+    {
+        return $this->analysis_version < config('recgames.analysis_version');
+    }
+
     public function recordedGame()
     {
         return $this->belongsTo(RecordedGame::class);
