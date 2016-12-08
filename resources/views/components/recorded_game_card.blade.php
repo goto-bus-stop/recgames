@@ -1,3 +1,5 @@
+@inject('helpers', 'App\Services\BladeHelpersService')
+
 <div class="column">
   <div class="card" style="margin: auto">
     <div class="card-image">
@@ -8,10 +10,17 @@
       </a>
       <div class="card-hover-data">
         <p>
+          <strong>Version</strong>
+          @lang('recanalyst::game_versions.' . $rec->analysis->game_version)
+        <p>
           <strong>Map</strong>
           {{ $rec->analysis->map_name }}
           <strong>Size</strong>
           @lang('recanalyst::ageofempires.map_sizes.' . $rec->analysis->map_size)
+        </p>
+        <p>
+          <strong>Duration</strong>
+          {{ $helpers->formatGameTime($rec->analysis->duration) }}
         </p>
         <p><strong>Players</strong></p>
         <div class="columns">
