@@ -27,7 +27,6 @@ class RecAnalyzeJob implements ShouldQueue
 {
     use InteractsWithQueue, Queueable, SerializesModels;
 
-    const ANALYZE_VERSION = 1;
     const MAP_IMAGE_WIDTH = 400;
     const MAP_IMAGE_HEIGHT = 200;
 
@@ -66,7 +65,6 @@ class RecAnalyzeJob implements ShouldQueue
             self::MAP_IMAGE_WIDTH,
             self::MAP_IMAGE_HEIGHT
         );
-        $mapPath = 'minimaps/' . $this->model->slug . '.png';
 
         $pov = null;
         foreach ($rec->players() as $player) {
@@ -76,7 +74,10 @@ class RecAnalyzeJob implements ShouldQueue
             }
         }
 
-        $disk->put('public/' . $mapPath, $mapImage->encode('png') . '');
+        $imageData = $mapImage->encode('png') . '';
+        $imageHash = md5($imageData);
+        $mapPath = 'minimaps/' . $imageHash . '.png';
+        $disk->put('public/' . $mapPath, $imageData);
 
         // Extract Voobly-style ratings
         foreach ($rec->body()->chatMessages as $message) {
@@ -89,6 +90,7 @@ class RecAnalyzeJob implements ShouldQueue
             'analysis_version' => config('recgames.analysis_version'),
             'game_version' => $rec->version()->version,
             'game_subversion' => $rec->version()->subVersion,
+            'minimap_hash' => $imageHash,
             'duration' => $rec->body()->duration,
             'game_type' => $rec->gameSettings()->gameType,
             'multiplayer' => true,

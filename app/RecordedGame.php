@@ -19,7 +19,7 @@ class RecordedGame extends Model
 
     public function getMinimapUrlAttribute()
     {
-        return Storage::url('public/minimaps/' . $this->slug . '.png');
+        return Storage::url('public/minimaps/' . $this->analysis->minimap_hash . '.png');
     }
 
     public function analysis()
