@@ -124,6 +124,7 @@ class GamesController extends Controller
 
         return view('recorded_game_result', [
             'title' => $title,
+            'rec' => $rec,
             'html' => $html,
         ]);
     }
