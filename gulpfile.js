@@ -49,9 +49,15 @@ gulp.task('js', () => {
           dangerousForOf: true,
           dangerousTaggedTemplateString: true
         },
-        objectAssign: 'Object.assign'
+        objectAssign: 'Object.assign',
+        jsx: 'h'
       }),
-      nodeResolve(),
+      nodeResolve({
+        preferBuiltins: false,
+        module: true,
+        jsnext: true,
+        browser: true
+      }),
       commonjs(),
       replace({
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development')
