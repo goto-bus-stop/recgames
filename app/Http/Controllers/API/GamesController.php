@@ -21,6 +21,46 @@ class GamesController extends Controller
     }
 
     /**
+     * Serialize a game into a JSON-API compatible array.
+     *
+     * @param \App\RecordedGame  $rec  Recorded game model.
+     * @return array
+     */
+    private function serializeGame(RecordedGame $rec): array
+    {
+        return [
+            'type' => 'recorded-games',
+            'id' => $rec->slug,
+            'attributes' => [
+                'filename' => $rec->filename ?? null,
+                'status' => $rec->status,
+            ],
+            'relationships' => [],
+            'links' => [
+                'self' => action('API\GamesController@show', $rec->slug),
+                'upload' => action('API\GamesController@upload', $rec->slug),
+                'download' => action('API\GamesController@download', $rec->slug),
+                'page' => action('GamesController@show', $rec->slug),
+                'embed' => action('GamesController@embed', $rec->slug),
+            ],
+        ];
+    }
+
+    /**
+     * List public recorded games.
+     */
+    public function list()
+    {
+        $games = RecordedGame::paginate(10);
+        return response()->json([
+            'meta' => [],
+            'data' => $games->map(function (RecordedGame $game): array {
+                return $this->serializeGame($game);
+            })->all(),
+        ], 200);
+    }
+
+    /**
      * Create a recorded game model.
      *
      * @param \Illuminate\Http\Request  $request
@@ -32,18 +72,7 @@ class GamesController extends Controller
 
         return response()->json([
             'meta' => [],
-            'data' => [
-                'type' => 'recorded-games',
-                'id' => $recordedGame->slug,
-                'attributes' => [
-                    'status' => $recordedGame->status,
-                ],
-                'relationships' => [],
-                'links' => [
-                    'self' => action('API\GamesController@show', $recordedGame->slug),
-                    'upload' => action('API\GamesController@upload', $recordedGame->slug),
-                ],
-            ],
+            'data' => $this->serializeGame($recordedGame),
         ], 200);
     }
 
@@ -55,21 +84,10 @@ class GamesController extends Controller
     public function show(string $slug)
     {
         $recordedGame = RecordedGame::fromSlug($slug);
-        $id = $recordedGame->slug;
 
         return response()->json([
-            'data' => [
-                'type' => 'recorded-games',
-                'id' => $id,
-                'attributes' => [
-                    'filename' => $recordedGame->filename,
-                    'status' => $recordedGame->status,
-                ],
-                'links' => [
-                    'self' => action('API\GamesController@show', $id),
-                    'download' => action('API\GamesController@download', $id),
-                ],
-            ],
+            'meta' => [],
+            'data' => $this->serializeGame($recordedGame),
         ], 200);
     }
 

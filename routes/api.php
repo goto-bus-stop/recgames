@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 */
 
 Route::group(['namespace' => 'API'], function () {
-    Route::get('recorded-games', 'GamesController@show');
+    Route::get('recorded-games', 'GamesController@list');
     Route::post('recorded-games', 'GamesController@create');
     Route::get('recorded-games/{id}', 'GamesController@show');
     Route::post('recorded-games/{id}/file', 'GamesController@upload');
