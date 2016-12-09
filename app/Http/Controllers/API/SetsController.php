@@ -90,33 +90,5 @@ class SetsController extends Controller
         }
 
         return response()->json($this->serializeSet($set), 200);
-
-        return response()->json([
-            'meta' => [],
-            'data' => [
-                'type' => 'sets',
-                'id' => $set->slug,
-                'attributes' => [
-                    'title' => $set->title,
-                    'description' => $set->description,
-                ],
-                'relationships' => [
-                    'items' => [
-                        'links' => [
-                            'related' => action('API\SetsController@showGames', $set->slug),
-                        ],
-                        'data' => $set->recordedGames->map(function ($rec) {
-                            return [
-                                'type' => 'recorded-games',
-                                'id' => $rec->slug,
-                            ];
-                        })->all(),
-                    ],
-                ],
-                'links' => [
-                    'self' => action('API\SetsController@show', $set->slug),
-                ],
-            ],
-        ], 200);
     }
 }
