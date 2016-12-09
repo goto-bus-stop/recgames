@@ -24,6 +24,9 @@
       </ul>
       <ul class="is-right">
         <li role="presentation">
+          <a href="#sharing" aria-controls="sharing" role="tab">Share</a>
+        </li>
+        <li role="presentation">
           <a href="{{ action('GamesController@download', $model->slug) }}">Download</a>
         </li>
       </ul>
@@ -196,6 +199,43 @@
       @include('components.researches_table', [
         'players' => $rec->players(),
       ])
+    </div>
+    <div class="tab-panel" id="sharing" role="tabpanel">
+      <h2 class="tab-title title">Share</h2>
+      <div>
+        <h3 class="subtitle">Direct Link</h3>
+        <p>
+          Share this game with friends by sending them a link, or posting it to
+          Facebook or Twitter.
+        </p>
+        <p>
+          <input class="input"
+                id="share-direct-link"
+                type="text"
+                value="{{ action('GamesController@show', $model->slug) }}"
+                onclick="this.select()"
+                readonly>
+        </p>
+      </div>
+      <br>
+      <div>
+        <h3 class="subtitle">Embed</h3>
+        <p>
+          Embed this game on your own site using this HTML snippet.
+        </p>
+        <p>
+          <textarea class="textarea"
+                    id="share-embed"
+                    type="text"
+                    onclick="this.select()"
+                    style="font-family: monospace"
+                    readonly>
+<iframe src="{{ action('GamesController@embed', $model->slug) }}" frameborder="0" width="100%" height="600">
+  <a href="{{ action('GamesController@show', $model->slug) }}">View game</a>
+</iframe>
+</textarea>
+        </p>
+      </div>
     </div>
   </div>
 </section>
