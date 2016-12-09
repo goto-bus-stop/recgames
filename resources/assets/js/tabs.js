@@ -50,6 +50,10 @@ export default function apply (tablist) {
   })
 
   tablist.addEventListener('click', (event) => {
+    if (event.target.getAttribute('role') !== 'tab') {
+      return
+    }
+
     event.preventDefault()
     deselectTabs(tablist)
     selectTab(event.target)
