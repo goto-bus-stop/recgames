@@ -77,16 +77,29 @@ class SetsController extends Controller
      */
     public function create(Request $request)
     {
-        $data = collect($request->input('data'));
-        $set = (new GameSet(
-            collect($data['attributes'])
-                ->only('title', 'description')
-                ->all()
-        ))->generatedSlug();
+        $this->validate($request, [
+            'data.attributes' => 'required',
+            'data.attributes.title' => 'string',
+            'data.attributes.description' => 'string',
+            'data.relationships.games.*.id' => 'string',
+            'data.relationships.games.*.type' => 'in:recorded-games',
+        ]);
+
+        $data = $request->input('data');
+
+        $attrs = array_only($data['attributes'], [
+            'title',
+            'description',
+        ]);
+
+        $set = (new GameSet($attrs))->generatedSlug();
         $set->save();
 
-        if ($data->has('relationships.games')) {
-            $set->recordedGames()->saveMany($data['relationships']['games']);
+        if (array_has($data, 'relationships.games')) {
+            $gameSlugs = array_pluck($data['relationships']['games'], 'id');
+            $set->recordedGames()->saveMany(
+                RecordedGame::whereIn('slug', $gameSlugs)->get()
+            );
         }
 
         return response()->json($this->serializeSet($set), 200);
