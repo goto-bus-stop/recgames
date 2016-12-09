@@ -9,6 +9,7 @@
         'filter' => $filter,
       ])
     </div>
+    <br>
     <div class="container">
       {{ $recordings->links() }}
     </div>
