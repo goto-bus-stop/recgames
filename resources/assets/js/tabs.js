@@ -18,9 +18,16 @@ function selectTab (tabHref) {
   const tab = tabHref.parentNode
   const target = tabHref.getAttribute('href')
   tab.classList.add('is-active')
-  target && select(target).forEach((panel) => {
-    panel.classList.add('is-active')
-  })
+  if (target) {
+    select(target).forEach((panel) => {
+      panel.classList.add('is-active')
+    })
+
+    // Update the hash, but don't scroll.
+    const oldScroll = document.body.scrollTop
+    window.location.hash = target
+    document.body.scrollTop = oldScroll
+  }
 }
 
 function setActiveTab(tablist, name) {
@@ -43,6 +50,7 @@ export default function apply (tablist) {
   })
 
   tablist.addEventListener('click', (event) => {
+    event.preventDefault()
     deselectTabs(tablist)
     selectTab(event.target)
   }, false)
