@@ -9,27 +9,52 @@ class RecordedGame extends Model
 {
     use SlugableTrait;
 
+    /**
+     * Attributes that are mass-assignable.
+     *
+     * @var string[]
+     */
     protected $fillable = ['slug', 'path', 'filename', 'status'];
 
-    public function getMinimapUrlAttribute()
+    /**
+     * Get a URL to a rendered minimap image of this game.
+     *
+     * @return string
+     */
+    public function getMinimapUrlAttribute(): string
     {
         return Storage::url('public/minimaps/' . $this->analysis->minimap_hash . '.png');
     }
 
+    /**
+     * Relationship to the most recent analysis.
+     */
     public function analysis()
     {
         return $this->hasOne(RecordedGameAnalysis::class)
             ->orderBy('created_at', 'desc');
     }
 
-    public function scopeMatchesPlayer($query, $likePlayer)
+    /**
+     * Query scope that filters games based on whether the players in them match
+     * a given regex.
+     *
+     * @param string  $likePlayer  Regular expression to match to the player name.
+     */
+    public function scopeMatchesPlayer($query, string $likePlayer)
     {
         return $query->whereHas('analysis.players', function ($query) use (&$likePlayer) {
             $query->where('name', 'like', $likePlayer);
         });
     }
 
-    public function scopeHasPlayer($query, $playerName)
+    /**
+     * Query scope that filters games based on whether the named player is in
+     * it.
+     *
+     * @param string  $playerName  Exact player name to match.
+     */
+    public function scopeHasPlayer($query, string $playerName)
     {
         return $query->whereHas('analysis.players', function ($query) use (&$playerName) {
             $query->where('name', $playerName);

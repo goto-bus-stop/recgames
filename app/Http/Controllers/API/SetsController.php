@@ -10,7 +10,13 @@ use App\RecordedGame;
 
 class SetsController extends Controller
 {
-    private function serializeSet(GameSet $set)
+    /**
+     * Serialize a set into a JSON-API compatible array.
+     *
+     * @param \App\GameSet  $set  Set.
+     * @return array
+     */
+    private function serializeSet(GameSet $set): array
     {
         return [
             'type' => 'sets',
@@ -24,7 +30,7 @@ class SetsController extends Controller
                     'links' => [
                         'related' => action('API\SetsController@showGames', $set->slug),
                     ],
-                    'data' => $set->recordedGames->map(function ($rec) {
+                    'data' => $set->recordedGames->map(function (RecordedGame $rec): array {
                         return ['type' => 'recorded-games', 'id' => $rec->slug];
                     })->all(),
                 ],
@@ -35,18 +41,26 @@ class SetsController extends Controller
         ];
     }
 
+    /**
+     * List public sets.
+     */
     public function list()
     {
         $sets = GameSet::paginate(10);
 
         return response()->json([
             'meta' => [],
-            'data' => $sets->getCollection()->map(function (GameSet $set) {
+            'data' => $sets->getCollection()->map(function (GameSet $set): array {
                 return $this->serializeSet($set);
             })->all(),
         ], 200);
     }
 
+    /**
+     * Show a single set.
+     *
+     * @param string  $slug  URL Slug of the set.
+     */
     public function show(string $slug)
     {
         $set = GameSet::fromSlug($slug);
@@ -57,7 +71,9 @@ class SetsController extends Controller
     }
 
     /**
+     * Create a new set.
      *
+     * @param \Illuminate\Http\Request  $request
      */
     public function create(Request $request)
     {

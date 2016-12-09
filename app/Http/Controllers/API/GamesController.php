@@ -22,6 +22,8 @@ class GamesController extends Controller
 
     /**
      * Create a recorded game model.
+     *
+     * @param \Illuminate\Http\Request  $request
      */
     public function create(Request $request)
     {
@@ -45,6 +47,11 @@ class GamesController extends Controller
         ], 200);
     }
 
+    /**
+     * Retrieve a single recorded game.
+     *
+     * @param string  $slug  URL slug of the recorded game.
+     */
     public function show(string $slug)
     {
         $recordedGame = RecordedGame::fromSlug($slug);
@@ -66,6 +73,12 @@ class GamesController extends Controller
         ], 200);
     }
 
+    /**
+     * Upload a recorded game file to a game resource.
+     *
+     * @param \Illuminate\Http\Request  $request
+     * @param string  $slug  URL slug of the recorded game resource.
+     */
     public function upload(Request $request, string $slug)
     {
         $this->validate($request, [
@@ -117,6 +130,11 @@ class GamesController extends Controller
         ], 200);
     }
 
+    /**
+     * Download a file associated with a recorded game resource.
+     *
+     * @param string  $slug  URL slug of the recorded game resource.
+     */
     public function download(string $slug)
     {
         $recordedGame = RecordedGame::fromSlug($slug);
@@ -130,6 +148,8 @@ class GamesController extends Controller
 
     /**
      * Request a reanalysis of a recorded game.
+     *
+     * @param string  $slug  URL slug of the recorded game resource.
      */
     public function reanalyze(string $slug)
     {
