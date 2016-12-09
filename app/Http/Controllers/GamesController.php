@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Filesystem\Factory as Filesystem;
 
-use App\RecordedGame;
+use App\Model\RecordedGame;
 use App\Http\Requests;
 use App\Jobs\RecAnalyzeJob;
 

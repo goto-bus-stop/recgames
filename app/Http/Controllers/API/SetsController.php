@@ -5,15 +5,15 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-use App\GameSet;
-use App\RecordedGame;
+use App\Model\GameSet;
+use App\Model\RecordedGame;
 
 class SetsController extends Controller
 {
     /**
      * Serialize a set into a JSON-API compatible array.
      *
-     * @param \App\GameSet  $set  Set.
+     * @param \App\Model\GameSet  $set  Set.
      * @return array
      */
     private function serializeSet(GameSet $set): array

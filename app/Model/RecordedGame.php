@@ -1,9 +1,11 @@
 <?php
 
-namespace App;
+namespace App\Model;
 
 use Storage;
 use Illuminate\Database\Eloquent\Model;
+
+use App\SlugableTrait;
 
 class RecordedGame extends Model
 {

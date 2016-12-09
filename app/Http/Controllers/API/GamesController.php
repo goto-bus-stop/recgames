@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Filesystem\Factory as Filesystem;
 
-use App\RecordedGame;
+use App\Model\RecordedGame;
 use App\Jobs\RecAnalyzeJob;
 use App\Http\Controllers\Controller;
 use App\Exceptions\JsonApiException;
@@ -23,7 +23,7 @@ class GamesController extends Controller
     /**
      * Serialize a game into a JSON-API compatible array.
      *
-     * @param \App\RecordedGame  $rec  Recorded game model.
+     * @param \App\Model\RecordedGame  $rec  Recorded game model.
      * @return array
      */
     private function serializeGame(RecordedGame $rec): array
