@@ -17,4 +17,5 @@ Route::get('/upload', 'GamesController@uploadForm');
 Route::post('/upload', 'GamesController@upload');
 
 Route::get('/game/{slug}', 'GamesController@show');
+Route::get('/game/{slug}/embed', 'GamesController@embed');
 Route::get('/game/{slug}/download', 'GamesController@download');

@@ -12,3 +12,9 @@
         display: none;
     }
 }
+
+.is-embed {
+    > .section {
+        padding: 0;
+    }
+}

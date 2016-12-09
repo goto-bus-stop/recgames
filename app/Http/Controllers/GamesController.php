@@ -130,6 +130,19 @@ class GamesController extends Controller
         ]);
     }
 
+    public function embed(Request $request, string $slug)
+    {
+        $rec = RecordedGame::where('slug', $slug)->first();
+
+        $html = $this->fs->get('analyses/' . $rec->slug . '.html');
+
+        return view('analysis_only', [
+            'rec' => $rec,
+            'title' => $rec->title,
+            'html' => $html,
+        ]);
+    }
+
     public function download(string $slug)
     {
         $rec = RecordedGame::where('slug', $slug)->first();
