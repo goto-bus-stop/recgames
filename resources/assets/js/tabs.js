@@ -1,4 +1,5 @@
 import { select } from './util'
+import isDescendant from 'is-descendant'
 
 function deselectTabs (tablist) {
   select('[role="tab"]', tablist).forEach((tabHref) => {
@@ -22,7 +23,25 @@ function selectTab (tabHref) {
   })
 }
 
+function setActiveTab(tablist, name) {
+  const selectedTab = select(`[role="tab"][aria-controls="${CSS.escape(name)}"]`)[0]
+  if (isDescendant(tablist, selectedTab)) {
+    deselectTabs(tablist)
+    selectTab(selectedTab)
+  }
+}
+
 export default function apply (tablist) {
+  if (window.location.hash) {
+    const tabName = window.location.hash.slice(1)
+    setActiveTab(tablist, tabName)
+  }
+
+  window.addEventListener('hashchange', () => {
+    const tabName = window.location.hash.slice(1)
+    setActiveTab(tablist, tabName)
+  })
+
   tablist.addEventListener('click', (event) => {
     deselectTabs(tablist)
     selectTab(event.target)

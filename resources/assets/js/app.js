@@ -1,5 +1,6 @@
 import 'es6-promise/auto'
 import 'whatwg-fetch'
+import 'css.escape'
 
 import { select } from './util'
 
