@@ -49,6 +49,12 @@ class SetsController extends Controller
         $sets = GameSet::paginate(10);
 
         return response()->json([
+            'links' => [
+                'first' => $sets->url(0),
+                'last' => $sets->url($sets->lastPage()),
+                'prev' => $sets->previousPageUrl(),
+                'next' => $sets->nextPageUrl(),
+            ],
             'meta' => [],
             'data' => $sets->getCollection()->map(function (GameSet $set): array {
                 return $this->serializeSet($set);

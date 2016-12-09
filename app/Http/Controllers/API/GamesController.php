@@ -53,6 +53,12 @@ class GamesController extends Controller
     {
         $games = RecordedGame::paginate(10);
         return response()->json([
+            'links' => [
+                'first' => $games->url(0),
+                'last' => $games->url($games->lastPage()),
+                'prev' => $games->previousPageUrl(),
+                'next' => $games->nextPageUrl(),
+            ],
             'meta' => [],
             'data' => $games->map(function (RecordedGame $game): array {
                 return $this->serializeGame($game);
