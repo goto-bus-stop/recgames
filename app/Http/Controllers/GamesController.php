@@ -67,6 +67,14 @@ class GamesController extends Controller
     {
         $recs = RecordedGame::where('status', 'completed')->orderBy('created_at', 'desc');
 
+        $filter = $request->input('filter');
+
+        if (isset($filter['player'])) {
+            collect($filter['player'])->each(function ($name) use (&$recs) {
+                $recs->hasPlayer($name);
+            });
+        }
+
         $recs->with([
             'analysis',
             'analysis.players' => function ($query) {
@@ -76,15 +84,8 @@ class GamesController extends Controller
             }
         ]);
 
-        $filter = $request->input('filter');
-
-        if (isset($filter['player'])) {
-            collect($filter['player'])->each(function ($name) use (&$recs) {
-                $recs->hasPlayer($name);
-            });
-        }
-
         return view('recorded_games_list', [
+            'filter' => $filter ?? [],
             'recordings' => $recs->paginate(32),
         ]);
     }
