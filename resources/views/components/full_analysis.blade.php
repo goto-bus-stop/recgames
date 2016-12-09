@@ -32,7 +32,7 @@
       <h2 class="tab-title title nojs-hidden">General</h2>
       <div class="columns">
         <div class="column" style="order: 2">
-          <img src="{{ asset($mapPath) }}" alt="Minimap" class="has-drop-shadow">
+          <img src="{{ asset($mapPath) }}" alt="Minimap">
         </div>
         <div class="column" style="order: 1">
           <table class="table">

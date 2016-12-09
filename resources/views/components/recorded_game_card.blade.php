@@ -5,7 +5,7 @@
     <div class="card-image">
       <a href="{{ action('GamesController@show', $rec->slug) }}">
         <figure class="image is-2by1">
-          <img src="{{ asset($rec->minimap_url) }}" alt="" class="has-drop-shadow">
+          <img src="{{ asset($rec->minimap_url) }}" alt="">
         </figure>
       </a>
       <div class="card-hover-data">
