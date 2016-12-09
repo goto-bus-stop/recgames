@@ -4,17 +4,18 @@
   @foreach ($players as $name)
     <input type="hidden" name="filter[player][]" value="{{ $name }}">
   @endforeach
-  <div class="control is-grouped">
+  <div class="columns">
     <?php $id = uniqid() ?>
-    <div class="control-label is-narrow">
-      <label class="label" for="{{ $id }}">Filter players:</label>
+    <div class="column is-narrow">
+      <div class="control-label">
+        <label class="label" for="{{ $id }}">Filter players:</label>
+      </div>
     </div>
-    <div class="control is-expanded">
-      <p><input class="input" id="{{ $id }}" type="text" name="filter[player][]" placeholder="Player name"></p>
+    <div class="column is-narrow">
       @if (!$players->isEmpty())
-        <p style="margin-top: 5px">
+        <div class="control">
           @foreach ($players as $i => $name)
-            <span class="tag">
+            <span class="tag is-medium is-info">
               {{ $name }}
               <a class="delete is-small"
                   href="{{ action('GamesController@list', [
@@ -25,13 +26,20 @@
               </a>
             </span>
           @endforeach
-        </p>
+        </div>
       @endif
     </div>
-    <div class="control">
-      <button class="button is-primary" type="submit">
-        Add
-      </button>
+    <div class="column">
+      <div class="control is-grouped">
+        <div class="control is-expanded">
+          <input class="input" id="{{ $id }}" type="text" name="filter[player][]" placeholder="Player name">
+        </div>
+        <div class="control">
+          <button class="button is-primary" type="submit">
+            Add
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </form>
