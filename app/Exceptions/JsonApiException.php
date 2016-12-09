@@ -4,7 +4,7 @@ namespace App\Exceptions;
 
 use Exception;
 use Throwable;
-use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
 
 class JsonApiException extends Exception
 {
@@ -47,7 +47,7 @@ class JsonApiException extends Exception
         return $this;
     }
 
-    public function response(): Response
+    public function response(): JsonResponse
     {
         return response()->json([
             'links' => $this->links,
