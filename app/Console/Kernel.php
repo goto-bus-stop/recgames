@@ -7,6 +7,7 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 use App\Jobs\PurgeUnusedGamesJob;
 use App\Console\Commands\ReanalyzeCommand;
+use App\Console\Commands\BumpAnalysisVersionCommand;
 
 class Kernel extends ConsoleKernel
 {
@@ -17,6 +18,7 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         ReanalyzeCommand::class,
+        BumpAnalysisVersionCommand::class,
     ];
 
     /**
