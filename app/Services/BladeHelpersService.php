@@ -17,7 +17,21 @@ class BladeHelpersService
         return RecAnalystUtils::formatGameTime($time);
     }
 
+    /**
+     * Build an array for a research table.
+     *
+     * @return \RecAnalyst\Model\Research[][][] An array of the format:
+     *
+     *     [$player => [
+     *         $minute => [...$researches]
+     *     ]]
+     */
     public function buildResearchesTable(array $players): array {
+        $researches = [];
+        foreach ($players as $player) {
+            $researches[$player->index] = [];
+        }
+
         $researchesByMinute = [];
         foreach ($players as $player) {
             foreach ($player->researches() as $research) {
@@ -25,8 +39,6 @@ class BladeHelpersService
                 $researchesByMinute[$minute][$player->index][] = $research;
             }
         }
-
-        $researches = [];
 
         foreach ($researchesByMinute as $minute => $researchesByPlayer) {
             foreach ($players as $player) {
