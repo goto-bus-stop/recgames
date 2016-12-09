@@ -6,7 +6,9 @@
   },
   "dependencies": {
     "bulma": "^0.2.1",
+    "css.escape": "^1.5.1",
     "es6-promise": "^4.0.5",
+    "is-descendant": "^0.0.1",
     "redux": "^3.6.0",
     "redux-actions": "^1.1.0",
     "whatwg-fetch": "^2.0.1",
