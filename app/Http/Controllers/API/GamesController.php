@@ -32,8 +32,8 @@ class GamesController extends Controller
             'meta' => [],
             'data' => [
                 'type' => 'recorded-games',
+                'id' => $recordedGame->slug,
                 'attributes' => [
-                    'id' => $recordedGame->slug,
                     'status' => $recordedGame->status,
                 ],
                 'relationships' => [],
@@ -53,8 +53,8 @@ class GamesController extends Controller
         return response()->json([
             'data' => [
                 'type' => 'recorded-games',
+                'id' => $id,
                 'attributes' => [
-                    'id' => $id,
                     'filename' => $recordedGame->filename,
                     'status' => $recordedGame->status,
                 ],
