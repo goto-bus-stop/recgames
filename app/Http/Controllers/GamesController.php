@@ -5,8 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Filesystem\Factory as Filesystem;
 
-use App\Model\RecordedGame;
 use App\Http\Requests;
+use App\Model\GameSet;
+use App\Model\RecordedGame;
 use App\Jobs\RecAnalyzeJob;
 
 class GamesController extends Controller
@@ -33,34 +34,46 @@ class GamesController extends Controller
             'recorded_game' => 'required',
         ]);
 
-        $file = $request->file('recorded_game');
+        $files = $request->file('recorded_game');
 
-        $storageName = $file->hashName();
-        // Redirect to the analysis page if this exact file was uploaded
-        // before.
-        if ($this->fs->exists('recordings/' . $storageName)) {
-            $rec = RecordedGame::where('path', $storageName)->first();
-            if ($rec) {
-                return redirect()->action('GamesController@show', $rec->slug);
+        $set = (new GameSet([
+            'title' => 'Uploaded files',
+            'description' => 'Auto-generated set for multiple upload.',
+        ]))->generatedSlug();
+        $set->save();
+
+        collect($files)->each(function ($file) use (&$set) {
+            $storageName = $file->hashName();
+
+            // Reuse a previous recorded game resource if this same game was
+            // uploaded before.
+            if ($this->fs->exists('recordings/' . $storageName)) {
+                $rec = RecordedGame::where('path', $storageName)->first();
+                $set->recordedGames()->save($rec);
+                return;
             }
+
+            $tmpPath = $file->path();
+            $path = $this->fs->putFile('recordings', $file);
+
+            $filename = $file->getClientOriginalName();
+
+            // Save the recorded game file metadata.
+            $model = (new RecordedGame([
+                'path' => $path,
+                'filename' => $filename,
+            ]))->generatedSlug();
+
+            $set->recordedGames()->save($model);
+
+            dispatch(RecAnalyzeJob::uploaded($model));
+        });
+
+        if (count($files) === 1) {
+            return redirect()->action('GamesController@show', $set->recordedGames()->first()->slug);
         }
 
-        $tmpPath = $file->path();
-        $path = $this->fs->putFile('recordings', $file);
-
-        $filename = $file->getClientOriginalName();
-
-        // Save the recorded game file metadata.
-        $model = (new RecordedGame([
-            'path' => $path,
-            'filename' => $filename,
-        ]))->generatedSlug();
-
-        $model->save();
-
-        dispatch(RecAnalyzeJob::uploaded($model));
-
-        return redirect()->action('GamesController@show', $model->slug);
+        return redirect()->action('SetsController@show', $set->slug);
     }
 
     public function list(Request $request)
