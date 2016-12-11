@@ -34,4 +34,20 @@ class GameSet extends Model
     {
         return $this->belongsToMany(RecordedGame::class, 'game_sets_games', 'set_id', 'game_id');
     }
+
+    /**
+     * Relationship to the game to use as the thumbnail for the set.
+     */
+    public function thumbnailGames()
+    {
+        return $this->recordedGames()->limit(1);
+    }
+
+    /**
+     *
+     */
+    public function getThumbnailGameAttribute()
+    {
+        return $this->thumbnailGames->first();
+    }
 }
