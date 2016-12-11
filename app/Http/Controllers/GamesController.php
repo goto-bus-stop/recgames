@@ -97,7 +97,7 @@ class GamesController extends Controller
             }
         ]);
 
-        return view('recorded_games_list', [
+        return view('games.list', [
             'filter' => $filter ?? [],
             'recordings' => $recs->paginate(32),
         ]);
@@ -111,11 +111,11 @@ class GamesController extends Controller
         $rec = RecordedGame::where('slug', $slug)->first();
 
         if ($rec->status === 'errored') {
-            return view('recorded_game_error', [
+            return view('games.show_error', [
                 'rec' => $rec,
             ]);
         } else if ($rec->status !== 'completed') {
-            return view('recorded_game_status', [
+            return view('games.show_status', [
                 'rec' => $rec,
             ]);
         }
@@ -136,7 +136,7 @@ class GamesController extends Controller
             })
             ->implode(' VS ');
 
-        return view('recorded_game_result', [
+        return view('games.show', [
             'title' => $title,
             'rec' => $rec,
             'html' => $html,
@@ -149,7 +149,7 @@ class GamesController extends Controller
 
         $html = $this->fs->get('analyses/' . $rec->slug . '.html');
 
-        return view('analysis_only', [
+        return view('games.embed', [
             'rec' => $rec,
             'title' => $rec->title,
             'html' => $html,
