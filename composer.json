@@ -13,7 +13,8 @@
         "emgag/flysystem-tempdir": "^0.1.0",
         "elasticsearch/elasticsearch": "^5.0",
         "michelf/php-markdown": "^1.7",
-        "scrivo/highlight.php": "8.*"
+        "scrivo/highlight.php": "8.*",
+        "nilportugues/laravel5-json-api": "^2.4"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
