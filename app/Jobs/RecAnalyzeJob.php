@@ -16,12 +16,12 @@ use RecAnalyst\Model\{
     Research
 };
 
-use App\{
+use App\Model\{
     RecordedGame,
     RecordedGamePlayer,
-    RecordedGameAnalysis,
-    Services\RecAnalystManager
+    RecordedGameAnalysis
 };
+use App\Services\RecAnalystManager;
 
 class RecAnalyzeJob implements ShouldQueue
 {

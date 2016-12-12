@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use Emgag\Flysystem\Tempdir;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Filesystem\Factory as Filesystem;
 
-use App\RecordedGame;
 use App\Http\Requests;
+use App\Model\GameSet;
+use App\Model\RecordedGame;
 use App\Jobs\RecAnalyzeJob;
 
 class GamesController extends Controller
 {
+    use UploadsRecordedGames;
+
     public function __construct(Filesystem $fs)
     {
         $this->fs = $fs->disk('local');
@@ -33,34 +37,35 @@ class GamesController extends Controller
             'recorded_game' => 'required',
         ]);
 
-        $file = $request->file('recorded_game');
+        $files = $request->file('recorded_game');
 
-        $storageName = $file->hashName();
-        // Redirect to the analysis page if this exact file was uploaded
-        // before.
-        if ($this->fs->exists('recordings/' . $storageName)) {
-            $rec = RecordedGame::where('path', $storageName)->first();
-            if ($rec) {
-                return redirect()->action('GamesController@show', $rec->slug);
-            }
+        $set = (new GameSet([
+            'title' => 'Uploaded files',
+            'description' => 'Auto-generated set for multiple upload.',
+        ]))->generatedSlug();
+        $set->save();
+
+        $temp = new Tempdir();
+        $models = collect($files)
+            ->map(function ($file) use (&$temp) {
+                return $this->extract($file, $temp);
+            })
+            ->flatten()
+            ->map(function ($file) {
+                return $this->storeRecordedGame($file, $this->fs);
+            });
+
+        $set->recordedGames()->saveMany($models);
+
+        $models->each(function ($rec) {
+            dispatch(RecAnalyzeJob::uploaded($rec));
+        });
+
+        if (count($models) === 1) {
+            return redirect()->action('GamesController@show', $models->first()->slug);
         }
 
-        $tmpPath = $file->path();
-        $path = $this->fs->putFile('recordings', $file);
-
-        $filename = $file->getClientOriginalName();
-
-        // Save the recorded game file metadata.
-        $model = (new RecordedGame([
-            'path' => $path,
-            'filename' => $filename,
-        ]))->generatedSlug();
-
-        $model->save();
-
-        dispatch(RecAnalyzeJob::uploaded($model));
-
-        return redirect()->action('GamesController@show', $model->slug);
+        return redirect()->action('SetsController@show', $set->slug);
     }
 
     public function list(Request $request)
@@ -84,7 +89,7 @@ class GamesController extends Controller
             }
         ]);
 
-        return view('recorded_games_list', [
+        return view('games.list', [
             'filter' => $filter ?? [],
             'recordings' => $recs->paginate(32),
         ]);
@@ -98,11 +103,11 @@ class GamesController extends Controller
         $rec = RecordedGame::where('slug', $slug)->first();
 
         if ($rec->status === 'errored') {
-            return view('recorded_game_error', [
+            return view('games.show_error', [
                 'rec' => $rec,
             ]);
         } else if ($rec->status !== 'completed') {
-            return view('recorded_game_status', [
+            return view('games.show_status', [
                 'rec' => $rec,
             ]);
         }
@@ -123,7 +128,7 @@ class GamesController extends Controller
             })
             ->implode(' VS ');
 
-        return view('recorded_game_result', [
+        return view('games.show', [
             'title' => $title,
             'rec' => $rec,
             'html' => $html,
@@ -136,7 +141,7 @@ class GamesController extends Controller
 
         $html = $this->fs->get('analyses/' . $rec->slug . '.html');
 
-        return view('analysis_only', [
+        return view('games.embed', [
             'rec' => $rec,
             'title' => $rec->title,
             'html' => $html,

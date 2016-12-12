@@ -5,7 +5,7 @@ namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Filesystem\Factory as Filesystem;
 
-use App\RecordedGame;
+use App\Model\RecordedGame;
 use App\Jobs\RecAnalyzeJob;
 use App\Http\Controllers\Controller;
 use App\Exceptions\JsonApiException;
@@ -21,7 +21,55 @@ class GamesController extends Controller
     }
 
     /**
+     * Serialize a game into a JSON-API compatible array.
+     *
+     * @param \App\Model\RecordedGame  $rec  Recorded game model.
+     * @return array
+     */
+    private function serializeGame(RecordedGame $rec): array
+    {
+        return [
+            'type' => 'recorded-games',
+            'id' => $rec->slug,
+            'attributes' => [
+                'filename' => $rec->filename ?? null,
+                'status' => $rec->status,
+            ],
+            'relationships' => [],
+            'links' => [
+                'self' => action('API\GamesController@show', $rec->slug),
+                'upload' => action('API\GamesController@upload', $rec->slug),
+                'download' => action('API\GamesController@download', $rec->slug),
+                'page' => action('GamesController@show', $rec->slug),
+                'embed' => action('GamesController@embed', $rec->slug),
+            ],
+        ];
+    }
+
+    /**
+     * List public recorded games.
+     */
+    public function list()
+    {
+        $games = RecordedGame::paginate(10);
+        return response()->json([
+            'links' => [
+                'first' => $games->url(0),
+                'last' => $games->url($games->lastPage()),
+                'prev' => $games->previousPageUrl(),
+                'next' => $games->nextPageUrl(),
+            ],
+            'meta' => [],
+            'data' => $games->map(function (RecordedGame $game): array {
+                return $this->serializeGame($game);
+            })->all(),
+        ], 200);
+    }
+
+    /**
      * Create a recorded game model.
+     *
+     * @param \Illuminate\Http\Request  $request
      */
     public function create(Request $request)
     {
@@ -30,42 +78,31 @@ class GamesController extends Controller
 
         return response()->json([
             'meta' => [],
-            'data' => [
-                'type' => 'recorded-games',
-                'id' => $recordedGame->slug,
-                'attributes' => [
-                    'status' => $recordedGame->status,
-                ],
-                'relationships' => [],
-                'links' => [
-                    'self' => action('API\GamesController@show', $recordedGame->slug),
-                    'upload' => action('API\GamesController@upload', $recordedGame->slug),
-                ],
-            ],
+            'data' => $this->serializeGame($recordedGame),
         ], 200);
     }
 
+    /**
+     * Retrieve a single recorded game.
+     *
+     * @param string  $slug  URL slug of the recorded game.
+     */
     public function show(string $slug)
     {
         $recordedGame = RecordedGame::fromSlug($slug);
-        $id = $recordedGame->slug;
 
         return response()->json([
-            'data' => [
-                'type' => 'recorded-games',
-                'id' => $id,
-                'attributes' => [
-                    'filename' => $recordedGame->filename,
-                    'status' => $recordedGame->status,
-                ],
-                'links' => [
-                    'self' => action('API\GamesController@show', $id),
-                    'download' => action('API\GamesController@download', $id),
-                ],
-            ],
+            'meta' => [],
+            'data' => $this->serializeGame($recordedGame),
         ], 200);
     }
 
+    /**
+     * Upload a recorded game file to a game resource.
+     *
+     * @param \Illuminate\Http\Request  $request
+     * @param string  $slug  URL slug of the recorded game resource.
+     */
     public function upload(Request $request, string $slug)
     {
         $this->validate($request, [
@@ -117,6 +154,11 @@ class GamesController extends Controller
         ], 200);
     }
 
+    /**
+     * Download a file associated with a recorded game resource.
+     *
+     * @param string  $slug  URL slug of the recorded game resource.
+     */
     public function download(string $slug)
     {
         $recordedGame = RecordedGame::fromSlug($slug);
@@ -130,6 +172,8 @@ class GamesController extends Controller
 
     /**
      * Request a reanalysis of a recorded game.
+     *
+     * @param string  $slug  URL slug of the recorded game resource.
      */
     public function reanalyze(string $slug)
     {

@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 
-use App\RecordedGame;
+use App\Model\RecordedGame;
 use App\Jobs\RecAnalyzeJob;
 
 class ReanalyzeCommand extends Command

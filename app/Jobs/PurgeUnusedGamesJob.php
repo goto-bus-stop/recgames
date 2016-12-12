@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\{SerializesModels, InteractsWithQueue};
 
-use App\RecordedGame;
+use App\Model\RecordedGame;
 
 /**
  * Delete recorded game models that have not had a game file uploaded within
