@@ -9,7 +9,8 @@
         "ext-imagick": "*",
         "laravel/framework": "5.3.*",
         "recanalyst/recanalyst": "^4.0.0",
-        "doctrine/dbal": "^2.5"
+        "doctrine/dbal": "^2.5",
+        "emgag/flysystem-tempdir": "^0.1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Emgag\Flysystem\Tempdir;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Filesystem\Factory as Filesystem;
 
@@ -12,6 +13,8 @@ use App\Jobs\RecAnalyzeJob;
 
 class GamesController extends Controller
 {
+    use UploadsRecordedGames;
+
     public function __construct(Filesystem $fs)
     {
         $this->fs = $fs->disk('local');
@@ -42,35 +45,24 @@ class GamesController extends Controller
         ]))->generatedSlug();
         $set->save();
 
-        collect($files)->each(function ($file) use (&$set) {
-            $storageName = $file->hashName();
+        $temp = new Tempdir();
+        $models = collect($files)
+            ->map(function ($file) use (&$temp) {
+                return $this->extract($file, $temp);
+            })
+            ->flatten()
+            ->map(function ($file) {
+                return $this->storeRecordedGame($file, $this->fs);
+            });
 
-            // Reuse a previous recorded game resource if this same game was
-            // uploaded before.
-            if ($this->fs->exists('recordings/' . $storageName)) {
-                $rec = RecordedGame::where('path', $storageName)->first();
-                $set->recordedGames()->save($rec);
-                return;
-            }
+        $set->recordedGames()->saveMany($models);
 
-            $tmpPath = $file->path();
-            $path = $this->fs->putFile('recordings', $file);
-
-            $filename = $file->getClientOriginalName();
-
-            // Save the recorded game file metadata.
-            $model = (new RecordedGame([
-                'path' => $path,
-                'filename' => $filename,
-            ]))->generatedSlug();
-
-            $set->recordedGames()->save($model);
-
-            dispatch(RecAnalyzeJob::uploaded($model));
+        $models->each(function ($rec) {
+            dispatch(RecAnalyzeJob::uploaded($rec));
         });
 
-        if (count($files) === 1) {
-            return redirect()->action('GamesController@show', $set->recordedGames()->first()->slug);
+        if (count($models) === 1) {
+            return redirect()->action('GamesController@show', $models->first()->slug);
         }
 
         return redirect()->action('SetsController@show', $set->slug);
