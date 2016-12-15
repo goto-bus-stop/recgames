@@ -81,6 +81,14 @@ class GamesController extends Controller
             });
         }
 
+        if (isset($filter['generic'])) {
+            $coll = app(AnalysisStorageService::class)->search($filter['generic']);
+
+            $recs = RecordedGame::whereHas('analysis', function ($query) use (&$coll) {
+                $query->whereIn('id', $coll->pluck('meta.analysis_id'));
+            });
+        }
+
         $recs->with([
             'analysis',
             'analysis.players' => function ($query) {

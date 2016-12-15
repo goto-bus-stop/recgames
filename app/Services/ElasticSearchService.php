@@ -52,9 +52,16 @@ class ElasticSearchService implements AnalysisStorageService
                     'query_string' => ['query' => $query],
                 ],
             ],
-            'fields' => [],
         ]);
 
-        return collect($results['hits']['hits']);
+        return collect($results['hits']['hits'])->map(function (array $item): Document {
+            $doc = Document::hydrate($item['_source']);
+
+            $doc->meta = new \StdClass;
+            $doc->meta->score = $item['_score'];
+            $doc->meta->analysis_id = (int) $item['_id'];
+
+            return $doc;
+        });
     }
 }
