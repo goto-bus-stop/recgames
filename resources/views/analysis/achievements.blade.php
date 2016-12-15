@@ -1,3 +1,5 @@
+@inject('helpers', 'App\Services\BladeHelpersService')
+
 <?php $id = $id ?? str_random(3) ?>
 <div class="tabs">
   <ul role="tablist">
@@ -33,21 +35,21 @@
       </tr>
     </thead>
     <tbody>
-      @foreach ($rec->players() as $player)
+      @foreach ($players as $player)
         <tr>
           <td class="AchievementsGroup-player">
             @include('components.player_badge', [
               'name' => $player->name,
-              'civilization' => $player->civId,
-              'color' => $player->colorId,
+              'civilization' => $player->civilization,
+              'color' => $player->color,
             ])
           </td>
-          <?php $achievements = $player->achievements() ?>
-          <td>{{ $achievements->military->score }}</td>
-          <td>{{ $achievements->economy->score }}</td>
-          <td>{{ $achievements->tech->score }}</td>
-          <td>{{ $achievements->society->score }}</td>
-          <td>{{ $achievements->score }}</td>
+          <?php $achievements = $player->achievements ?>
+          <td>{{ $achievements['military']['score'] }}</td>
+          <td>{{ $achievements['economy']['score'] }}</td>
+          <td>{{ $achievements['tech']['score'] }}</td>
+          <td>{{ $achievements['society']['score'] }}</td>
+          <td>{{ $achievements['score'] }}</td>
         </tr>
       @endforeach
     </tbody>
@@ -68,23 +70,23 @@
       </tr>
     </thead>
     <tbody>
-      @foreach ($rec->players() as $player)
+      @foreach ($players as $player)
         <tr>
-          <?php $military = $player->achievements()->military ?>
+          <?php $military = $player->achievements['military'] ?>
           <td class="AchievementsGroup-player">
             @include('components.player_badge', [
               'name' => $player->name,
-              'civilization' => $player->civId,
-              'color' => $player->colorId,
+              'civilization' => $player->civilization,
+              'color' => $player->color,
             ])
           </td>
-          <td title="Inflicted {{ $military->hitPointsKilled }} HP damage">
-            {{ $military->unitsKilled }}
+          <td title="Inflicted {{ $military['hitPointsKilled'] }} HP damage">
+            {{ $military['unitsKilled'] }}
           </td>
-          <td>{{ $military->unitsLost }}</td>
-          <td>{{ $military->buildingsRazed }}</td>
-          <td>{{ $military->buildingsLost }}</td>
-          <td>{{ $military->unitsConverted }}</td>
+          <td>{{ $military['unitsLost'] }}</td>
+          <td>{{ $military['buildingsRazed'] }}</td>
+          <td>{{ $military['buildingsLost'] }}</td>
+          <td>{{ $military['unitsConverted'] }}</td>
         </tr>
       @endforeach
     </tbody>
@@ -106,22 +108,22 @@
       </tr>
     </thead>
     <tbody>
-      @foreach ($rec->players() as $player)
+      @foreach ($players as $player)
         <tr>
-          <?php $economy = $player->achievements()->economy ?>
+          <?php $economy = $player->achievements['economy'] ?>
           <td class="AchievementsGroup-player">
             @include('components.player_badge', [
               'name' => $player->name,
-              'civilization' => $player->civId,
-              'color' => $player->colorId,
+              'civilization' => $player->civilization,
+              'color' => $player->color,
             ])
           </td>
-          <td>{{ $economy->foodCollected }}</td>
-          <td>{{ $economy->woodCollected }}</td>
-          <td>{{ $economy->stoneCollected }}</td>
-          <td>{{ $economy->goldCollected }}</td>
-          <td>{{ $economy->tradeProfit }}</td>
-          <td>{{ $economy->tributeSent }} / {{ $economy->tributeReceived }}</td>
+          <td>{{ $economy['foodCollected'] }}</td>
+          <td>{{ $economy['woodCollected'] }}</td>
+          <td>{{ $economy['stoneCollected'] }}</td>
+          <td>{{ $economy['goldCollected'] }}</td>
+          <td>{{ $economy['tradeProfit'] }}</td>
+          <td>{{ $economy['tributeSent'] }} / {{ $economy['tributeReceived'] }}</td>
         </tr>
       @endforeach
     </tbody>
@@ -143,22 +145,22 @@
       </tr>
     </thead>
     <tbody>
-      @foreach ($rec->players() as $player)
+      @foreach ($players as $player)
         <tr>
-          <?php $tech = $player->achievements()->tech ?>
+          <?php $tech = $player->achievements['tech'] ?>
           <td class="AchievementsGroup-player">
             @include('components.player_badge', [
               'name' => $player->name,
-              'civilization' => $player->civId,
-              'color' => $player->colorId,
+              'civilization' => $player->civilization,
+              'color' => $player->color,
             ])
           </td>
-          <td>{{ $helpers->formatGameTime($tech->feudalTime === -1 ? 0 : $tech->feudalTime * 1000) }}</td>
-          <td>{{ $helpers->formatGameTime($tech->castleTime === -1 ? 0 : $tech->castleTime * 1000) }}</td>
-          <td>{{ $helpers->formatGameTime($tech->imperialTime === -1 ? 0 : $tech->imperialTime * 1000) }}</td>
-          <td>{{ $tech->mapExploration }}%</td>
-          <td>{{ $tech->researchCount }}</td>
-          <td>{{ $tech->researchPercent }}%</td>
+          <td>{{ $helpers->formatGameTime($tech['feudalTime'] === -1 ? 0 : $tech['feudalTime'] * 1000) }}</td>
+          <td>{{ $helpers->formatGameTime($tech['castleTime'] === -1 ? 0 : $tech['castleTime'] * 1000) }}</td>
+          <td>{{ $helpers->formatGameTime($tech['imperialTime'] === -1 ? 0 : $tech['imperialTime'] * 1000) }}</td>
+          <td>{{ $tech['mapExploration'] }}%</td>
+          <td>{{ $tech['researchCount'] }}</td>
+          <td>{{ $tech['researchPercent'] }}%</td>
         </tr>
       @endforeach
     </tbody>
@@ -179,21 +181,21 @@
       </tr>
     </thead>
     <tbody>
-      @foreach ($rec->players() as $player)
+      @foreach ($players as $player)
         <tr>
-          <?php $society = $player->achievements()->society ?>
+          <?php $society = $player->achievements['society'] ?>
           <td class="AchievementsGroup-player">
             @include('components.player_badge', [
               'name' => $player->name,
-              'civilization' => $player->civId,
-              'color' => $player->colorId,
+              'civilization' => $player->civilization,
+              'color' => $player->color,
             ])
           </td>
-          <td>{{ $society->totalWonders }}</td>
-          <td>{{ $society->totalCastles }}</td>
-          <td>{{ $society->relicsCaptured }}</td>
-          <td>{{ $player->achievements()->economy->relicGold }}%</td>
-          <td>{{ $society->villagerHigh }}</td>
+          <td>{{ $society['totalWonders'] }}</td>
+          <td>{{ $society['totalCastles'] }}</td>
+          <td>{{ $society['relicsCaptured'] }}</td>
+          <td>{{ $player->achievements['economy']['relicGold'] }}%</td>
+          <td>{{ $society['villagerHigh'] }}</td>
         </tr>
       @endforeach
     </tbody>

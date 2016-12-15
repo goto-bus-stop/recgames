@@ -10,6 +10,7 @@ use App\Http\Requests;
 use App\Model\GameSet;
 use App\Model\RecordedGame;
 use App\Jobs\RecAnalyzeJob;
+use App\Contracts\AnalysisStorageService;
 
 class GamesController extends Controller
 {
@@ -98,7 +99,7 @@ class GamesController extends Controller
     /**
      * Show data about a recorded game file.
      */
-    public function show(Request $request, string $slug)
+    public function show(Request $request, AnalysisStorageService $analyses, string $slug)
     {
         $rec = RecordedGame::where('slug', $slug)->first();
 
@@ -116,7 +117,12 @@ class GamesController extends Controller
             dispatch(RecAnalyzeJob::reanalyze($rec));
         }
 
-        $html = $this->fs->get('analyses/' . $rec->slug . '.html');
+        $doc = $analyses->get($rec->analysis->id);
+        $html = view('analysis.index', [
+            'achievements' => !!($doc->players()->first()->achievements ?? false),
+            'rec' => $rec,
+            'analysis' => $doc,
+        ])->render();
 
         $title = $rec->analysis->players
             ->reject(function ($player) { return $player->type === 'spectator'; })

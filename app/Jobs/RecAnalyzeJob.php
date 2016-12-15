@@ -122,17 +122,6 @@ class RecAnalyzeJob implements ShouldQueue
         $analysisDocument = $this->makeDocument($rec);
         $analyses->store($analysis->id, $analysisDocument);
 
-        $html = view('components.full_analysis', [
-            'model' => $this->model,
-            'achievements' => !!$rec->achievements(),
-            'analysis' => $analysis,
-            'rec' => $rec,
-            'pov' => $pov,
-            'mapPath' => $this->model->minimap_url,
-        ])->render();
-
-        $disk->put('analyses/' . $this->model->slug . '.html', $html);
-
         $this->model->status = 'completed';
         $this->model->save();
     }
@@ -147,9 +136,18 @@ class RecAnalyzeJob implements ShouldQueue
     {
         $rec = $this->analyzer;
 
-        $players = array_map(function (Player $player): array {
+        $toArray = function ($obj) use (&$toArray) {
+            if (!is_object($obj) && !is_array($obj)) {
+                return $obj;
+            }
+
+            return array_map($toArray, (array) $obj);
+        };
+
+        $players = array_map(function (Player $player) use (&$toArray): array {
             return [
                 'is_pov' => $player->owner ? true : false,
+                'achievements' => $toArray($player->achievements()),
                 'index' => $player->index,
                 'name' => $player->name,
                 'team' => $player->team,
