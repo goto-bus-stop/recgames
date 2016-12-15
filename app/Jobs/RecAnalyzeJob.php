@@ -16,12 +16,13 @@ use RecAnalyst\Model\{
     Research
 };
 
-use App\Model\{
-    RecordedGame,
-    RecordedGamePlayer,
-    RecordedGameAnalysis
+use App\{
+    Model\RecordedGame,
+    Model\RecordedGamePlayer,
+    Model\RecordedGameAnalysis,
+    Services\RecAnalystManager,
+    Contracts\AnalysisStorageService
 };
-use App\Services\RecAnalystManager;
 
 class RecAnalyzeJob implements ShouldQueue
 {
@@ -48,7 +49,7 @@ class RecAnalyzeJob implements ShouldQueue
      *
      * @return void
      */
-    public function handle(RecAnalystManager $recAnalyst, Filesystem $fs)
+    public function handle(RecAnalystManager $recAnalyst, Filesystem $fs, AnalysisStorageService $analyses)
     {
         $disk = $fs->disk('local');
 
@@ -94,9 +95,9 @@ class RecAnalyzeJob implements ShouldQueue
             'duration' => $rec->body()->duration,
             'game_type' => $rec->gameSettings()->gameType,
             'multiplayer' => true,
-                // $rec->gameSettings()->gameMode === \RecAnalyst\GameInfo::MODE_MULTIPLAYER,
             'map_size' => $rec->gameSettings()->mapSize,
             'map_id' => $rec->gameSettings()->mapId,
+            'map_name' => $rec->gameSettings()->isCustomMap() ? $rec->gameSettings()->mapName() : null,
             'pop_limit' => $rec->gameSettings()->popLimit,
             'lock_diplomacy' => $rec->gameSettings()->lockDiplomacy,
         ]);
@@ -106,6 +107,7 @@ class RecAnalyzeJob implements ShouldQueue
             $players[] = new RecordedGamePlayer([
                 'name' => $player->name,
                 'player_index' => $player->index,
+                'is_pov' => $player->owner,
                 'type' => $player->isSpectator() ? 'spectator' :
                          ($player->isHuman() ? 'human' : 'ai'),
                 'team' => $player->team,
@@ -116,6 +118,9 @@ class RecAnalyzeJob implements ShouldQueue
         }
 
         $analysis->players()->saveMany($players);
+
+        $analysisDocument = $this->makeDocument($rec);
+        $analyses->store($analysis->id, $analysisDocument);
 
         $html = view('components.full_analysis', [
             'model' => $this->model,
@@ -136,6 +141,59 @@ class RecAnalyzeJob implements ShouldQueue
     {
         $this->model->status = 'errored';
         $this->model->save();
+    }
+
+    private function makeDocument(): array
+    {
+        $rec = $this->analyzer;
+
+        $players = array_map(function (Player $player): array {
+            return [
+                'is_pov' => $player->owner ? true : false,
+                'index' => $player->index,
+                'name' => $player->name,
+                'team' => $player->team,
+                'color' => $player->colorId,
+                'civilization' => $player->civId,
+                'type' => $player->isSpectator() ? 'spectator' :
+                    ($player->isHuman() ? 'human' : 'ai'),
+                'researches' => array_map(function (Research $research): array {
+                    return ['id' => $research->id, 'time' => $research->time];
+                }, $player->researches()),
+                'rating' => $player->rating ?? null,
+            ];
+        }, $rec->players());
+
+        return [
+            'analyze_version' => config('recgames.analysis_version'),
+            'version' => $rec->version()->version,
+            'sub_version' => $rec->version()->subVersion,
+            'duration' => $rec->body()->duration,
+            'game_type' => $rec->gameSettings()->gameType,
+            'multiplayer' => true, // $rec->gameSettings()->gameMode === 1,
+            'map_size' => $rec->gameSettings()->mapSize,
+            'map' => $rec->gameSettings()->mapId,
+            'map_name' => $rec->gameSettings()->mapName(),
+            'scenario_filename' => $rec->header()->scenarioFilename ?? '',
+            'pop_limit' => $rec->gameSettings()->popLimit,
+            'lock_diplomacy' => $rec->gameSettings()->lockDiplomacy,
+            'players' => $players,
+            'pregame_chat' => array_map(function (ChatMessage $chat): array {
+                return [
+                    'group' => $chat->group,
+                    'player' => $chat->player ? $chat->player->index : null,
+                    'message' => $chat->msg,
+                ];
+            }, $rec->header()->pregameChat),
+            'ingame_chat' => array_map(function (ChatMessage $chat): array {
+                return [
+                    'time' => $chat->time,
+                    'group' => $chat->group,
+                    'player' => $chat->player ? $chat->player->index : null,
+                    'message' => $chat->msg,
+                ];
+            }, $rec->body()->chatMessages),
+        ];
     }
 
     /**
