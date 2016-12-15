@@ -81,7 +81,7 @@ class GamesController extends Controller
             });
         }
 
-        if (isset($filter['generic'])) {
+        if (!empty($filter['generic'])) {
             $coll = app(AnalysisStorageService::class)->search($filter['generic']);
 
             $recs = RecordedGame::whereHas('analysis', function ($query) use (&$coll) {
