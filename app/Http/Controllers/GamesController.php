@@ -40,8 +40,15 @@ class GamesController extends Controller
 
         $files = $request->file('recorded_game');
 
+        $title = 'Uploaded files';
+        if (count($files) === 1) {
+            if ($files[0]->getMimeType() === 'application/zip' || $files[0]->getMimeType() === 'application/x-rar') {
+                $title = pathinfo($files[0]->getClientOriginalName(), PATHINFO_FILENAME);
+            }
+        }
+
         $set = (new GameSet([
-            'title' => 'Uploaded files',
+            'title' => $title,
             'description' => 'Auto-generated set for multiple upload.',
         ]))->generatedSlug();
         $set->save();
