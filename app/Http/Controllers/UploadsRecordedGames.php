@@ -9,7 +9,10 @@ use Illuminate\{
     Support\Collection
 };
 use League\Flysystem\FilesystemInterface;
-use Symfony\Component\HttpFoundation\File\File as SymfonyFile;
+use Symfony\Component\HttpFoundation\File\{
+    UploadedFile,
+    File as SymfonyFile
+};
 
 use App\Model\RecordedGame;
 use App\Exceptions\JsonApiException;
