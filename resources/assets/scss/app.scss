@@ -1,7 +1,13 @@
 @import "./bulma";
+@import "highlight.js/styles/github.css";
 @import "./util.scss";
 @import "./PlayerBadge.scss";
 @import "./PlayerResearches.scss";
+
+.hljs {
+    @extend code;
+    font-size: inherit;
+}
 
 #s-menu-open:checked + .nav .nav-menu {
     @extend .nav-menu.is-active;

@@ -11,7 +11,9 @@
         "recanalyst/recanalyst": "^4.0.0",
         "doctrine/dbal": "^2.5",
         "emgag/flysystem-tempdir": "^0.1.0",
-        "elasticsearch/elasticsearch": "^5.0"
+        "elasticsearch/elasticsearch": "^5.0",
+        "michelf/php-markdown": "^1.7",
+        "scrivo/highlight.php": "8.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
