@@ -62,4 +62,19 @@ class RecordedGame extends Model
             $query->where('name', $playerName);
         });
     }
+
+    /**
+     *
+     */
+    public function scopeWithAnalysis($query)
+    {
+        return $query->with([
+            'analysis',
+            'analysis.players' => function ($query) {
+                return $query
+                    ->orderBy('team', 'asc')
+                    ->where('type', '!=', 'spectator');
+            },
+        ]);
+    }
 }

@@ -95,14 +95,7 @@ class GamesController extends Controller
             });
         }
 
-        $recs->with([
-            'analysis',
-            'analysis.players' => function ($query) {
-                return $query
-                    ->orderBy('team', 'asc')
-                    ->where('type', '!=', 'spectator');
-            }
-        ]);
+        $recs->withAnalysis();
 
         return view('games.list', [
             'filter' => $filter ?? [],
