@@ -67,3 +67,19 @@
     </div>
   @endforeach
 </div>
+
+@if (count($analysis->spectators()))
+  <h4 class="subtitle">Spectators</h4>
+  <div class="columns is-multiline">
+    @foreach ($analysis->spectators() as $spectator)
+      <div class="column">
+        <p>
+          <a href="{{ action('GamesController@list', ['filter' => 'players.name:' . $spectator->name]) }}"
+              class="title is-player-{{ $spectator->color }}">
+            {{ $spectator->name }}
+          </a>
+        </p>
+      </div>
+    @endforeach
+  </div>
+@endif

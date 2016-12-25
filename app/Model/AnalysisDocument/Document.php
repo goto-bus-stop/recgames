@@ -89,8 +89,8 @@ class Document extends ToObject
     public function teams(): Collection
     {
         return $this->players()->groupBy(function (Player $player) {
-            return $player->team ?? uniqid();
-        });
+            return $player->team ?: uniqid();
+        })->values();
     }
 
     /**

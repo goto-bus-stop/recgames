@@ -21,7 +21,7 @@ class Player extends ToObject
         parent::__construct($raw);
 
         $this->doc = $document;
-        $this->researches = collect($raw['researches'])->map(function ($research) {
+        $this->researches = collect($raw['researches'] ?? [])->map(function ($research) {
             return Research::hydrate($this, $research);
         });
     }
