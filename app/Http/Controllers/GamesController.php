@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Emgag\Flysystem\Tempdir;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Filesystem\Factory as Filesystem;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use App\Http\Requests;
 use App\Jobs\RecAnalyzeJob;
@@ -112,7 +111,7 @@ class GamesController extends Controller
         $rec = RecordedGame::where('slug', $slug)->first();
 
         if (!$rec) {
-            throw new NotFoundHttpException('Could not find the requested game.');
+            abort(404, 'Could not find the requested game.');
         }
 
         if ($rec->status === 'errored') {
