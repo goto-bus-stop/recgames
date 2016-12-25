@@ -4,8 +4,14 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-use App\Contracts\AnalysisStorageService;
-use App\Services\ElasticSearchService;
+use App\Contracts\{
+    AnalysisSearchService,
+    AnalysisStorageService
+};
+use App\Services\{
+    ElasticSearchService,
+    FilesystemStorageService
+};
 
 class AnalysisStorageServiceProvider extends ServiceProvider
 {
@@ -17,16 +23,6 @@ class AnalysisStorageServiceProvider extends ServiceProvider
     protected $defer = true;
 
     /**
-     * Bootstrap any application services.
-     *
-     * @return void
-     */
-    public function boot()
-    {
-        //
-    }
-
-    /**
      * Register any application services.
      *
      * @return void
@@ -35,13 +31,16 @@ class AnalysisStorageServiceProvider extends ServiceProvider
     {
         $app = $this->app;
 
-        $app->singleton(ElasticSearchService::class, function () {
-            return new ElasticSearchService();
+        $app->singleton(
+            AnalysisStorageService::class,
+            FilesystemStorageService::class
+        );
+
+        $app->singleton(AnalysisSearchService::class, function ($app) {
+            return new ElasticSearchService(
+                $app->make('config')->get('database.elasticsearch')
+            );
         });
-
-        $app->bind(AnalysisStorageService::class, ElasticSearchService::class);
-
-        $app->alias(AnalysisStorageService::class, 'analysis-storage');
     }
 
     /**
@@ -51,6 +50,9 @@ class AnalysisStorageServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return [AnalysisStorageService::class];
+        return [
+            AnalysisStorageService::class,
+            AnalysisSearchService::class,
+        ];
     }
 }

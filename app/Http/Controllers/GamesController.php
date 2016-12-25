@@ -7,10 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Contracts\Filesystem\Factory as Filesystem;
 
 use App\Http\Requests;
-use App\Model\GameSet;
-use App\Model\RecordedGame;
 use App\Jobs\RecAnalyzeJob;
-use App\Contracts\AnalysisStorageService;
+use App\Model\{GameSet, RecordedGame};
+use App\Contracts\{AnalysisStorageService, AnalysisSearchService};
 
 class GamesController extends Controller
 {
@@ -89,10 +88,10 @@ class GamesController extends Controller
         }
 
         if (!empty($filter['generic'])) {
-            $coll = app(AnalysisStorageService::class)->search($filter['generic']);
+            $coll = app(AnalysisSearchService::class)->search($filter['generic'])->all();
 
             $recs = RecordedGame::whereHas('analysis', function ($query) use (&$coll) {
-                $query->whereIn('id', $coll->pluck('meta.analysis_id'));
+                $query->whereIn('id', $coll);
             });
         }
 

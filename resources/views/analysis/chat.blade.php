@@ -19,7 +19,7 @@
       <span class="ChatMessage-time">
         {{ $message->formattedTime() }}
       </span>
-      @if ($message->player)
+      @if ($message->player())
         <span class="ChatMessage-sender is-player-{{ $message->player()->color }}">
           {{ $message->player()->name }}
         </span>:

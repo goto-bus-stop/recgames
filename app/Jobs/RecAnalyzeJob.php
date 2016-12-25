@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Contracts\Filesystem\Factory as Filesystem;
 use Illuminate\Queue\{SerializesModels, InteractsWithQueue};
-use Elasticsearch\ClientBuilder;
 
 use RecAnalyst\Model\{
     ChatMessage,
@@ -21,7 +20,9 @@ use App\{
     Model\RecordedGamePlayer,
     Model\RecordedGameAnalysis,
     Services\RecAnalystManager,
-    Contracts\AnalysisStorageService
+    Services\GameKeywordsService,
+    Contracts\AnalysisStorageService,
+    Contracts\AnalysisSearchService
 };
 
 class RecAnalyzeJob implements ShouldQueue
@@ -49,8 +50,12 @@ class RecAnalyzeJob implements ShouldQueue
      *
      * @return void
      */
-    public function handle(RecAnalystManager $recAnalyst, Filesystem $fs, AnalysisStorageService $analyses)
-    {
+    public function handle(
+        RecAnalystManager $recAnalyst,
+        Filesystem $fs,
+        AnalysisStorageService $analyses,
+        AnalysisSearchService $search
+    ) {
         $disk = $fs->disk('local');
 
         $this->model->status = 'processing';
@@ -120,7 +125,10 @@ class RecAnalyzeJob implements ShouldQueue
         $analysis->players()->saveMany($players);
 
         $analysisDocument = $this->makeDocument($rec);
+        $searchDocument = $this->makeSearchDocument($rec);
+
         $analyses->store($analysis->id, $analysisDocument);
+        $search->store($analysis->id, $searchDocument);
 
         $this->model->status = 'completed';
         $this->model->save();
@@ -132,6 +140,12 @@ class RecAnalyzeJob implements ShouldQueue
         $this->model->save();
     }
 
+    /**
+     * Build a document representing the analysis results, suitable for storage
+     * as JSON.
+     *
+     * @return array
+     */
     private function makeDocument(): array
     {
         $rec = $this->analyzer;
@@ -162,6 +176,17 @@ class RecAnalyzeJob implements ShouldQueue
             ];
         }, $rec->players());
 
+        $spectators = array_map(function (Player $player): array {
+            return [
+                'is_pov' => $player->owner ? true : false,
+                'index' => $player->index,
+                'team' => $player->team,
+                'name' => $player->name,
+                'color' => $player->colorId,
+                'type' => 'spectator',
+            ];
+        }, $rec->spectators());
+
         return [
             'analyze_version' => config('recgames.analysis_version'),
             'version' => $rec->version()->version,
@@ -175,7 +200,7 @@ class RecAnalyzeJob implements ShouldQueue
             'scenario_filename' => $rec->header()->scenarioFilename ?? '',
             'pop_limit' => $rec->gameSettings()->popLimit,
             'lock_diplomacy' => $rec->gameSettings()->lockDiplomacy,
-            'players' => $players,
+            'players' => array_merge($players, $spectators),
             'pregame_chat' => array_map(function (ChatMessage $chat): array {
                 return [
                     'group' => $chat->group,
@@ -191,6 +216,34 @@ class RecAnalyzeJob implements ShouldQueue
                     'message' => $chat->msg,
                 ];
             }, $rec->body()->chatMessages),
+        ];
+    }
+
+    /**
+     * Build a document with useful data for full-text search.
+     */
+    private function makeSearchDocument(): array
+    {
+        $rec = $this->analyzer;
+        $keywords = app(GameKeywordsService::class)->getKeywords($rec);
+
+        return [
+            'version' => $rec->version()->name(),
+            'duration' => $rec->body()->duration,
+            'game_type' => $rec->gameSettings()->gameTypeName(),
+            'game_mode' => 'multiplayer',
+            'map_name' => $rec->header()->scenarioFilename ??
+                $rec->gameSettings()->mapName(),
+            'map_size' => $rec->gameSettings()->mapSizeName(),
+            'players' => array_map(function (Player $player): array {
+                return [
+                    'name' => $player->name,
+                    'civilization' => $player->civName(),
+                    'rating' => $player->rating ?? null,
+                    'type' => $player->isHuman() ? 'human' : 'ai',
+                ];
+            }, $rec->players()),
+            'keywords' => $keywords,
         ];
     }
 

@@ -5,16 +5,15 @@ namespace App\Services;
 use Elasticsearch\ClientBuilder;
 use Illuminate\Support\Collection;
 
-use App\Model\AnalysisDocument\Document;
-use App\Contracts\AnalysisStorageService;
+use App\Contracts\AnalysisSearchService;
 
-class ElasticSearchService implements AnalysisStorageService
+class ElasticSearchService implements AnalysisSearchService
 {
     private $es;
 
-    public function __construct()
+    public function __construct(array $config)
     {
-        $this->es = ClientBuilder::create()->build();
+        $this->es = ClientBuilder::fromConfig($config);
     }
 
     public function store(int $id, $document): void
@@ -25,21 +24,6 @@ class ElasticSearchService implements AnalysisStorageService
             'id' => $id,
             'body' => $document,
         ]);
-    }
-
-    public function get(int $id): Document
-    {
-        $response = $this->es->get([
-            'index' => 'recgames',
-            'type' => 'analyses',
-            'id' => $id,
-        ]);
-
-        if (empty($response)) {
-            throw new \Exception('Could not find analysis #' . $id);
-        }
-
-        return Document::hydrate($response['_source']);
     }
 
     public function search(string $query): Collection
@@ -54,14 +38,6 @@ class ElasticSearchService implements AnalysisStorageService
             ],
         ]);
 
-        return collect($results['hits']['hits'])->map(function (array $item): Document {
-            $doc = Document::hydrate($item['_source']);
-
-            $doc->meta = new \StdClass;
-            $doc->meta->score = $item['_score'];
-            $doc->meta->analysis_id = (int) $item['_id'];
-
-            return $doc;
-        });
+        return collect($results['hits']['hits'])->pluck('_id');
     }
 }

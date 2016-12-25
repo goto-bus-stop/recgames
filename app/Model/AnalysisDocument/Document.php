@@ -59,7 +59,7 @@ class Document extends ToObject
         });
     }
 
-    public function player(int $index): Player
+    public function player(int $index)
     {
         return $this->players->first(function (Player $player) use ($index) {
             return $player->index === $index;

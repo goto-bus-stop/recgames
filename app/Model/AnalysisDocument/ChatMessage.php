@@ -20,7 +20,7 @@ class ChatMessage extends ToObject
         $this->sender = $sender;
     }
 
-    public function player(): Player
+    public function player()
     {
         return $this->sender;
     }
