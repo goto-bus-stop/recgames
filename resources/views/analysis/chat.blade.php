@@ -1,9 +1,11 @@
-
 <div class="Chat-pregame" style="margin-bottom: 20px">
   <h3 class="subtitle">Pre-game</h3>
   @forelse ($pregame as $message)
     <div class="ChatMessage">
-      <span class="ChatMessage-sender">{{ $message->player()->name }}</span>:
+      <span class="ChatMessage-sender
+                   @if ($message->player()->colorId !== -1) is-player-{{ $message->player()->color }} @endif">
+        {{ $message->player()->name }}
+      </span>:
       {{ $message->message }}
     </div>
   @empty
