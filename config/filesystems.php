@@ -54,6 +54,12 @@ return [
             'visibility' => 'public',
         ],
 
+        // Used for the Filesystem analysis storage service.
+        'analysis_documents' => [
+            'driver' => 'local',
+            'root' => storage_path('app/analysis-documents'),
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => 'your-key',

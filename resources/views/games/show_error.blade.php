@@ -3,7 +3,8 @@
 @section('title', 'Recorded Game')
 
 @section('content')
-    <div class="section">
+  <div class="section">
+    <div class="container">
       <div class="notification">
         <p>
           Analysis of this game failed. This might be a bug in the analyzer. The
@@ -21,4 +22,5 @@
         </p>
       </div>
     </div>
+  </div>
 @endsection

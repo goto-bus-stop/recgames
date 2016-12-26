@@ -25,6 +25,7 @@ class RecordedGameAnalysis extends Model
 
     public function getMapNameAttribute()
     {
-        return trans('recanalyst::ageofempires.map_names.' . $this->map_id);
+        return $this->getAttributeFromArray('map_name') ??
+            trans('recanalyst::ageofempires.map_names.' . $this->map_id);
     }
 }

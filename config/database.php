@@ -118,4 +118,14 @@ return [
 
     ],
 
+    /**
+     * ElasticSearch database config. See
+     * https://www.elastic.co/guide/en/elasticsearch/client/php-api/current/_configuration.html
+     */
+    'elasticsearch' => [
+
+    ],
+
+    'couchdb' => [],
+
 ];

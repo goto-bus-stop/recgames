@@ -3,11 +3,11 @@
 <div class="PlayerResearches">
   <div class="PlayerResearches-players">
     @foreach ($players as $player)
-      <div class="PlayerResearches-player is-player-{{ $player->colorId }}-bg">
-        <img class="PlayerResearches-civ"
-              src="{{ asset('vendor/recanalyst/civs/' . $player->colorId . '/' . $player->civId . '.png') }}"
-              alt="{{ $player->civName() }}"
-              title="{{ $player->civName() }}">
+      <div class="PlayerResearches-player is-player-{{ $player->color }}-bg">
+        <img class="PlayerResearches-civ is-hidden-mobile"
+             src="{{ asset('vendor/recanalyst/civs/' . $player->color . '/' . $player->civilization . '.png') }}"
+             alt="{{ $player->civName() }}"
+             title="{{ $player->civName() }}">
         {{ $player->name }}
       </div>
     @endforeach
@@ -17,7 +17,7 @@
   </div>
   <div class="PlayerResearches-scrollable">
     <table class="PlayerResearches-researches">
-      <?php $table = $table ?? $helpers->buildResearchesTable($players) ?>
+      <?php $table = $table ?? $helpers->buildResearchesTable($players->all()) ?>
       @foreach ($players as $player)
         <?php $timeline = $table[$player->index] ?>
         <tr class="PlayerResearches-row">
@@ -26,7 +26,7 @@
               @foreach ($researches as $research)
                 <img class="PlayerResearches-research"
                       src="{{ asset('vendor/recanalyst/researches/' . $research->id . '.png') }}"
-                      title="{{ $research->name() }} ({{ $helpers->formatGameTime($research->time) }})">
+                      title="{{ $research->name() }} ({{ $research->formattedTime() }})">
               @endforeach
             </td>
           @endforeach

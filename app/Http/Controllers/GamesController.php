@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 use Illuminate\Contracts\Filesystem\Factory as Filesystem;
 
 use App\Http\Requests;
-use App\Model\GameSet;
-use App\Model\RecordedGame;
 use App\Jobs\RecAnalyzeJob;
+use App\Model\{GameSet, RecordedGame};
+use App\Contracts\{AnalysisStorageService, AnalysisSearchService};
 
 class GamesController extends Controller
 {
@@ -39,8 +39,15 @@ class GamesController extends Controller
 
         $files = $request->file('recorded_game');
 
+        $title = 'Uploaded files';
+        if (count($files) === 1) {
+            if ($files[0]->getMimeType() === 'application/zip' || $files[0]->getMimeType() === 'application/x-rar') {
+                $title = pathinfo($files[0]->getClientOriginalName(), PATHINFO_FILENAME);
+            }
+        }
+
         $set = (new GameSet([
-            'title' => 'Uploaded files',
+            'title' => $title,
             'description' => 'Auto-generated set for multiple upload.',
         ]))->generatedSlug();
         $set->save();
@@ -78,19 +85,18 @@ class GamesController extends Controller
             collect($filter['player'])->each(function ($name) use (&$recs) {
                 $recs->hasPlayer($name);
             });
+        } else if (is_string($filter) && $filter) {
+            $coll = app(AnalysisSearchService::class)->search($filter)->all();
+
+            $recs = RecordedGame::whereHas('analysis', function ($query) use (&$coll) {
+                $query->whereIn('id', $coll);
+            });
         }
 
-        $recs->with([
-            'analysis',
-            'analysis.players' => function ($query) {
-                return $query
-                    ->orderBy('team', 'asc')
-                    ->where('type', '!=', 'spectator');
-            }
-        ]);
+        $recs->withAnalysis();
 
         return view('games.list', [
-            'filter' => $filter ?? [],
+            'filter' => $filter ?? '',
             'recordings' => $recs->paginate(32),
         ]);
     }
@@ -98,9 +104,13 @@ class GamesController extends Controller
     /**
      * Show data about a recorded game file.
      */
-    public function show(Request $request, string $slug)
+    public function show(Request $request, AnalysisStorageService $analyses, string $slug)
     {
         $rec = RecordedGame::where('slug', $slug)->first();
+
+        if (!$rec) {
+            abort(404, 'Could not find the requested game.');
+        }
 
         if ($rec->status === 'errored') {
             return view('games.show_error', [
@@ -116,13 +126,16 @@ class GamesController extends Controller
             dispatch(RecAnalyzeJob::reanalyze($rec));
         }
 
-        $html = $this->fs->get('analyses/' . $rec->slug . '.html');
+        $doc = $analyses->get($rec->analysis->id);
+        $html = view('analysis.index', [
+            'achievements' => !!($doc->players()->first()->achievements ?? false),
+            'rec' => $rec,
+            'analysis' => $doc,
+        ])->render();
 
         $title = $rec->analysis->players
             ->reject(function ($player) { return $player->type === 'spectator'; })
-            ->groupBy(function ($player) {
-                return $player->team ?: uniqid();
-            })
+            ->groupBy(function ($player) { return $player->team ?: uniqid(); })
             ->map(function ($team, $key) {
                 return $team->pluck('name')->implode(', ');
             })

@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Contracts\Filesystem\Factory as Filesystem;
 use Illuminate\Queue\{SerializesModels, InteractsWithQueue};
-use Elasticsearch\ClientBuilder;
 
 use RecAnalyst\Model\{
     ChatMessage,
@@ -16,12 +15,15 @@ use RecAnalyst\Model\{
     Research
 };
 
-use App\Model\{
-    RecordedGame,
-    RecordedGamePlayer,
-    RecordedGameAnalysis
+use App\{
+    Model\RecordedGame,
+    Model\RecordedGamePlayer,
+    Model\RecordedGameAnalysis,
+    Services\RecAnalystManager,
+    Services\GameKeywordsService,
+    Contracts\AnalysisStorageService,
+    Contracts\AnalysisSearchService
 };
-use App\Services\RecAnalystManager;
 
 class RecAnalyzeJob implements ShouldQueue
 {
@@ -48,8 +50,12 @@ class RecAnalyzeJob implements ShouldQueue
      *
      * @return void
      */
-    public function handle(RecAnalystManager $recAnalyst, Filesystem $fs)
-    {
+    public function handle(
+        RecAnalystManager $recAnalyst,
+        Filesystem $fs,
+        AnalysisStorageService $analyses,
+        AnalysisSearchService $search
+    ) {
         $disk = $fs->disk('local');
 
         $this->model->status = 'processing';
@@ -94,9 +100,9 @@ class RecAnalyzeJob implements ShouldQueue
             'duration' => $rec->body()->duration,
             'game_type' => $rec->gameSettings()->gameType,
             'multiplayer' => true,
-                // $rec->gameSettings()->gameMode === \RecAnalyst\GameInfo::MODE_MULTIPLAYER,
             'map_size' => $rec->gameSettings()->mapSize,
             'map_id' => $rec->gameSettings()->mapId,
+            'map_name' => $rec->gameSettings()->isCustomMap() ? $rec->gameSettings()->mapName() : null,
             'pop_limit' => $rec->gameSettings()->popLimit,
             'lock_diplomacy' => $rec->gameSettings()->lockDiplomacy,
         ]);
@@ -106,6 +112,7 @@ class RecAnalyzeJob implements ShouldQueue
             $players[] = new RecordedGamePlayer([
                 'name' => $player->name,
                 'player_index' => $player->index,
+                'is_pov' => $player->owner,
                 'type' => $player->isSpectator() ? 'spectator' :
                          ($player->isHuman() ? 'human' : 'ai'),
                 'team' => $player->team,
@@ -117,16 +124,11 @@ class RecAnalyzeJob implements ShouldQueue
 
         $analysis->players()->saveMany($players);
 
-        $html = view('components.full_analysis', [
-            'model' => $this->model,
-            'achievements' => !!$rec->achievements(),
-            'analysis' => $analysis,
-            'rec' => $rec,
-            'pov' => $pov,
-            'mapPath' => $this->model->minimap_url,
-        ])->render();
+        $analysisDocument = $this->makeDocument($rec);
+        $searchDocument = $this->makeSearchDocument($rec);
 
-        $disk->put('analyses/' . $this->model->slug . '.html', $html);
+        $analyses->store($analysis->id, $analysisDocument);
+        $search->store($analysis->id, $searchDocument);
 
         $this->model->status = 'completed';
         $this->model->save();
@@ -136,6 +138,113 @@ class RecAnalyzeJob implements ShouldQueue
     {
         $this->model->status = 'errored';
         $this->model->save();
+    }
+
+    /**
+     * Build a document representing the analysis results, suitable for storage
+     * as JSON.
+     *
+     * @return array
+     */
+    private function makeDocument(): array
+    {
+        $rec = $this->analyzer;
+
+        $toArray = function ($obj) use (&$toArray) {
+            if (!is_object($obj) && !is_array($obj)) {
+                return $obj;
+            }
+
+            return array_map($toArray, (array) $obj);
+        };
+
+        $players = array_map(function (Player $player) use (&$toArray): array {
+            return [
+                'is_pov' => $player->owner ? true : false,
+                'achievements' => $toArray($player->achievements()),
+                'index' => $player->index,
+                'name' => $player->name,
+                'team' => $player->team,
+                'color' => $player->colorId,
+                'civilization' => $player->civId,
+                'type' => $player->isSpectator() ? 'spectator' :
+                    ($player->isHuman() ? 'human' : 'ai'),
+                'researches' => array_map(function (Research $research): array {
+                    return ['id' => $research->id, 'time' => $research->time];
+                }, $player->researches()),
+                'rating' => $player->rating ?? null,
+            ];
+        }, $rec->players());
+
+        $spectators = array_map(function (Player $player): array {
+            return [
+                'is_pov' => $player->owner ? true : false,
+                'index' => $player->index,
+                'team' => $player->team,
+                'name' => $player->name,
+                'color' => $player->colorId,
+                'type' => 'spectator',
+            ];
+        }, $rec->spectators());
+
+        return [
+            'analyze_version' => config('recgames.analysis_version'),
+            'version' => $rec->version()->version,
+            'sub_version' => $rec->version()->subVersion,
+            'duration' => $rec->body()->duration,
+            'game_type' => $rec->gameSettings()->gameType,
+            'multiplayer' => true, // $rec->gameSettings()->gameMode === 1,
+            'map_size' => $rec->gameSettings()->mapSize,
+            'map' => $rec->gameSettings()->mapId,
+            'map_name' => $rec->gameSettings()->mapName(),
+            'scenario_filename' => $rec->header()->scenarioFilename ?? '',
+            'pop_limit' => $rec->gameSettings()->popLimit,
+            'lock_diplomacy' => $rec->gameSettings()->lockDiplomacy,
+            'players' => array_merge($players, $spectators),
+            'pregame_chat' => array_map(function (ChatMessage $chat): array {
+                return [
+                    'group' => $chat->group,
+                    'player' => $chat->player ? $chat->player->index : null,
+                    'message' => $chat->msg,
+                ];
+            }, $rec->header()->pregameChat),
+            'ingame_chat' => array_map(function (ChatMessage $chat): array {
+                return [
+                    'time' => $chat->time,
+                    'group' => $chat->group,
+                    'player' => $chat->player ? $chat->player->index : null,
+                    'message' => $chat->msg,
+                ];
+            }, $rec->body()->chatMessages),
+        ];
+    }
+
+    /**
+     * Build a document with useful data for full-text search.
+     */
+    private function makeSearchDocument(): array
+    {
+        $rec = $this->analyzer;
+        $keywords = app(GameKeywordsService::class)->getKeywords($rec);
+
+        return [
+            'version' => $rec->version()->name(),
+            'duration' => $rec->body()->duration,
+            'game_type' => $rec->gameSettings()->gameTypeName(),
+            'game_mode' => 'multiplayer',
+            'map_name' => $rec->header()->scenarioFilename ??
+                $rec->gameSettings()->mapName(),
+            'map_size' => $rec->gameSettings()->mapSizeName(),
+            'players' => array_map(function (Player $player): array {
+                return [
+                    'name' => $player->name,
+                    'civilization' => $player->civName(),
+                    'rating' => $player->rating ?? null,
+                    'type' => $player->isHuman() ? 'human' : 'ai',
+                ];
+            }, $rec->players()),
+            'keywords' => $keywords,
+        ];
     }
 
     /**

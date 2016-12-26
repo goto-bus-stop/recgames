@@ -21,6 +21,7 @@ Running a local copy of [recgam.es][] requires:
  - PHP 7.0 or higher
  - The Imagick extension
  - A MySQL database
+ - [ElasticSearch][]
  - [Composer][], for PHP dependencies
  - [Node.js][], for frontend dependencies and code
 
@@ -35,6 +36,9 @@ cd recgames
 # Install dependencies
 composer install
 npm install
+# Configure your local environment
+cp .env.example .env
+nano .env
 # Compile JS and CSS
 npm run prod
 # Run it!
@@ -47,6 +51,7 @@ php artisan serve
 
 [recgam.es]: https://recgam.es
 [Laravel]: https://laravel.com
+[ElasticSearch]: https://www.elastic.co/products/elasticsearch
 [RecAnalyst]: https://github.com/goto-bus-stop/recanalyst
 [Composer]: https://getcomposer.org
 [Node.js]: https://nodejs.org

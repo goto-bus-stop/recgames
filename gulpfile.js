@@ -18,6 +18,11 @@ gulp.task('css', () => {
   return gulp.src('resources/assets/scss/app.scss')
     .pipe(scss({
       importer: (url, prev, done) => {
+        // Remove the .css extension from resolved @import paths, so libsass
+        // will include the  file. Otherwise it would insert a raw @import
+        // statement.
+        const strip = path => path.replace(/\.css$/, '')
+
         const opts = {
           basedir: path.dirname(prev),
           extensions: [ '.sass', '.scss', '.css' ]
@@ -26,10 +31,10 @@ gulp.task('css', () => {
           if (err) {
             resolve(`./${url}`, opts, (err, result) => {
               if (err) done(err)
-              else done({ file: result })
+              else done({ file: strip(result) })
             })
           } else {
-            done({ file: result })
+            done({ file: strip(result) })
           }
         })
       }
