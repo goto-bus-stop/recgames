@@ -27,7 +27,7 @@
           <th>PoV</th>
           <td>
             @if ($pov)
-              <a href="{{ action('GamesController@list', ['filter' => ['player' => $pov->name]]) }}">
+              <a href="{{ action('GamesController@list', $helpers->filterPlayerName($pov->name)) }}">
                 @include('components.player_badge', [
                   'name' => $pov->name,
                   'civilization' => $pov->civilization,
@@ -56,7 +56,7 @@
             </p>
           </figure>
           <div class="media-content">
-            <a href="{{ action('GamesController@list', ['filter' => ['player' => $player->name]]) }}"
+            <a href="{{ action('GamesController@list', $helpers->filterPlayerName($player->name)) }}"
                 class="title is-player-{{ $player->color }}">
               {{ $player->name }}
             </a>
@@ -74,7 +74,7 @@
     @foreach ($analysis->spectators() as $spectator)
       <div class="column">
         <p>
-          <a href="{{ action('GamesController@list', ['filter' => 'players.name:' . $spectator->name]) }}"
+          <a href="{{ action('GamesController@list', $helpers->filterPlayerName($spectator->name)) }}"
               class="title is-player-{{ $spectator->color }}">
             {{ $spectator->name }}
           </a>

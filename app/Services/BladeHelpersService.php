@@ -17,6 +17,13 @@ class BladeHelpersService
         return RecAnalystUtils::formatGameTime($time);
     }
 
+    public function filterPlayerName(string $name): array
+    {
+        return [
+            'filter' => sprintf('players.name:"%s"', $name),
+        ];
+    }
+
     /**
      * Build an array for a research table.
      *

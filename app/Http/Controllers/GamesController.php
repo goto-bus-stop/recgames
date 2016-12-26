@@ -85,10 +85,8 @@ class GamesController extends Controller
             collect($filter['player'])->each(function ($name) use (&$recs) {
                 $recs->hasPlayer($name);
             });
-        }
-
-        if (!empty($filter['generic'])) {
-            $coll = app(AnalysisSearchService::class)->search($filter['generic'])->all();
+        } else if (is_string($filter) && $filter) {
+            $coll = app(AnalysisSearchService::class)->search($filter)->all();
 
             $recs = RecordedGame::whereHas('analysis', function ($query) use (&$coll) {
                 $query->whereIn('id', $coll);
@@ -98,7 +96,7 @@ class GamesController extends Controller
         $recs->withAnalysis();
 
         return view('games.list', [
-            'filter' => $filter ?? [],
+            'filter' => $filter ?? '',
             'recordings' => $recs->paginate(32),
         ]);
     }
@@ -137,9 +135,7 @@ class GamesController extends Controller
 
         $title = $rec->analysis->players
             ->reject(function ($player) { return $player->type === 'spectator'; })
-            ->groupBy(function ($player) {
-                return $player->team ?: uniqid();
-            })
+            ->groupBy(function ($player) { return $player->team ?: uniqid(); })
             ->map(function ($team, $key) {
                 return $team->pluck('name')->implode(', ');
             })
