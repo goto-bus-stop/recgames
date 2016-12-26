@@ -4,10 +4,10 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
-use App\Contracts\AnalysisStorageService;
-use App\Services\FilesystemStorageService;
+use App\Contracts\AnalysisSearchService;
+use App\Services\ElasticSearchService;
 
-class AnalysisStorageServiceProvider extends ServiceProvider
+class AnalysisSearchServiceProvider extends ServiceProvider
 {
     /**
      * Indicates if loading of the provider is deferred.
@@ -25,10 +25,11 @@ class AnalysisStorageServiceProvider extends ServiceProvider
     {
         $app = $this->app;
 
-        $app->singleton(
-            AnalysisStorageService::class,
-            FilesystemStorageService::class
-        );
+        $app->singleton(AnalysisSearchService::class, function ($app) {
+            return new ElasticSearchService(
+                $app->make('config')->get('database.elasticsearch')
+            );
+        });
     }
 
     /**
@@ -39,7 +40,7 @@ class AnalysisStorageServiceProvider extends ServiceProvider
     public function provides()
     {
         return [
-            AnalysisStorageService::class,
+            AnalysisSearchService::class,
         ];
     }
 }
