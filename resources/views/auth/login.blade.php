@@ -13,6 +13,12 @@
           <a href="{{ route('password.reset') }}">Forgot Password?</a>
         </p>
         <div class="panel-block">
+          @if ($errors->has('social'))
+            <div class="notification is-danger">
+              {{ $errors->first('social') }}
+            </div>
+          @endif
+
           <form role="form" method="POST" action="{{ route('login') }}">
             {{ csrf_field() }}
 
