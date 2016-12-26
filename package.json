@@ -8,6 +8,7 @@
     "bulma": "^0.2.1",
     "css.escape": "^1.5.1",
     "es6-promise": "^4.0.5",
+    "highlight.js": "^9.9.0",
     "is-descendant": "^0.0.1",
     "preact": "^7.1.0",
     "redux": "^3.6.0",

@@ -22,3 +22,5 @@ Route::get('/game/{slug}/download', 'GamesController@download');
 
 Route::get('/sets', 'SetsController@list');
 Route::get('/set/{slug}', 'SetsController@show');
+
+Route::get('/recanalyst', 'RecAnalystController@index');

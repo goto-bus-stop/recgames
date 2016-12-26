@@ -7,3 +7,8 @@
 @import "./navs.scss";
 @import "./tabs.scss";
 @import "./card.scss";
+
+// Style tables by default in .content blocks.
+.content table {
+    @extend .table;
+}
