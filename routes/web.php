@@ -25,6 +25,9 @@ Route::get('/set/{slug}', 'SetsController@show')->name('sets.show');
 
 Route::get('/recanalyst', 'RecAnalystController@index')->name('recanalyst');
 
+Route::get('/profile/{user}', 'ProfileController@show');
+Route::get('/profile', 'ProfileController@showSelf')->name('profile');
+
 Route::group(['namespace' => 'Auth'], function () {
     Route::get('/login', 'LoginController@showLoginForm')->name('login');
     Route::post('/login', 'LoginController@login');

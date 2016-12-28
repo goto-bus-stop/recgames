@@ -32,7 +32,9 @@
         <a class="nav-item" href="{{ action('GamesController@list') }}">Games</a>
         <a class="nav-item" href="{{ action('SetsController@list') }}">Sets</a>
         @if (Auth::check())
-          <a class="nav-item" href="{{ url('/profile') }}">{{ Auth::user()->name }}</a>
+          <a class="nav-item" href="{{ action('ProfileController@showSelf') }}">
+            {{ Auth::user()->name }}
+          </a>
         @else
           <a class="nav-item" href="{{ route('login') }}">Log in</a>
           <a class="nav-item" href="{{ route('register') }}">Create Account</a>
