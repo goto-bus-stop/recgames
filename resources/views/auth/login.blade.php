@@ -25,6 +25,11 @@
                 <img alt="Steam Login" src="{{ asset('img/steam-login.png') }}">
               </a>
             </div>
+            <div class="column">
+              <a href="{{ action('Auth\SocialiteController@twitchRedirect') }}">
+                <img alt="Twitch Login" src="{{ asset('img/twitch-login.png') }}">
+              </a>
+            </div>
           </div>
 
           <form role="form" method="POST" action="{{ route('login') }}">

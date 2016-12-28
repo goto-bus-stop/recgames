@@ -20,7 +20,8 @@
         "nilportugues/json-api": "^2.4",
         "cloudcreativity/json-api": "^0.6.0",
         "laravel/socialite": "^2.0",
-        "socialiteproviders/steam": "dev-master"
+        "socialiteproviders/steam": "dev-master",
+        "socialiteproviders/twitch": "^2.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

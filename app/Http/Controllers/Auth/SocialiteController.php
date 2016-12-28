@@ -36,6 +36,46 @@ class SocialiteController extends Controller
     }
 
     /**
+     * Get a Socialite Twitch provider.
+     */
+    private function twitch()
+    {
+        $config = $this->makeConfig('twitch', [
+            'redirect' => action('Auth\SocialiteController@twitchCallback'),
+        ]);
+        return Socialite::with('twitch')->setConfig($config);
+    }
+
+    /**
+     *
+     */
+    private function completeAuth(AuthManager $auth, $user, $key)
+    {
+        $model = User::where($key, $user->id)->first();
+
+        if (!$model && $auth->check()) {
+            // Associate logged-in user with this OAuth ID.
+            $model = $auth->user();
+            $model->update([
+                $key => $user->id,
+            ]);
+        } else if (!$model) {
+            // Create a new user for this OAuth ID.
+            // TODO deal with the case where the username is taken.
+            // TODO Some providers include emails, do we want to use those here?
+            $model = User::create([
+                'name' => $user->nickname,
+                $key => $user->id,
+            ]);
+        }
+
+        // Log in as this user.
+        $auth->login($model);
+
+        return $model;
+    }
+
+    /**
      * Redirect to the Steam login page.
      */
     public function steamRedirect()
@@ -56,24 +96,33 @@ class SocialiteController extends Controller
             ]);
         }
 
-        $model = User::fromSteamId($user->id);
-        if (!$model && $auth->check()) {
-            // Associate logged-in user with this Steam ID.
-            $model = $auth->user();
-            $model->update([
-                'steam_id'=> $user->id,
-            ]);
-        } else if (!$model) {
-            // Create a new user for this Steam ID.
-            // TODO deal with the case where the username is taken.
-            $model = User::create([
-                'name' => $user->nickname,
-                'steam_id' => $user->id,
+        $model = $this->completeAuth($auth, $user, 'steam_id');
+
+        return redirect()->action('GamesController@list');
+    }
+
+    /**
+     * Redirect to the Twitch login page.
+     */
+    public function twitchRedirect()
+    {
+        return $this->twitch()->redirect();
+    }
+
+    /**
+     * Process a Twitch login.
+     */
+    public function twitchCallback(AuthManager $auth)
+    {
+        try {
+            $user = $this->twitch()->user();
+        } catch (OpenIDValidationException $err) {
+            return redirect()->route('login')->withErrors([
+                'social' => 'Could not authenticate with Twitch.'
             ]);
         }
 
-        // Log in as this Steam ID.
-        $auth->login($model);
+        $model = $this->completeAuth($auth, $user, 'twitch_id');
 
         return redirect()->action('GamesController@list');
     }

@@ -41,4 +41,10 @@ return [
         'redirect' => null, // Filled in at runtime.
     ],
 
+    'twitch' => [
+        'client_id' => env('TWITCH_KEY'),
+        'client_secret' => env('TWITCH_SECRET'),
+        'redirect' => null, // Filled in at runtime.
+    ],
+
 ];

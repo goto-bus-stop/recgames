@@ -44,4 +44,6 @@ Route::group(['namespace' => 'Auth'], function () {
     // Social logins
     Route::get('/auth/steam', 'SocialiteController@steamRedirect');
     Route::get('/auth/steam/callback', 'SocialiteController@steamCallback');
+    Route::get('/auth/twitch', 'SocialiteController@twitchRedirect');
+    Route::get('/auth/twitch/callback', 'SocialiteController@twitchCallback');
 });

@@ -19,6 +19,7 @@ class User extends Authenticatable
         'email',
         'password',
         'steam_id',
+        'twitch_id',
     ];
 
     /**
