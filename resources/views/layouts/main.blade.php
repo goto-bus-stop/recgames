@@ -29,7 +29,8 @@
       </label>
 
       <div class="nav-right nav-menu">
-        <a class="nav-item" href="{{ url('/') }}">Games</a>
+        <a class="nav-item" href="{{ action('GamesController@list') }}">Games</a>
+        <a class="nav-item" href="{{ action('SetsController@list') }}">Sets</a>
         <span class="nav-item">
           <a class="button is-primary" href="{{ action('GamesController@upload') }}">
             <span>Upload</span>
