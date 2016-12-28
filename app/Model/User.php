@@ -35,4 +35,30 @@ class User extends Authenticatable
     {
         return self::where('steam_id', $id)->first();
     }
+
+    /**
+     * Relationship to the games uploaded by this user.
+     */
+    public function uploaded()
+    {
+        return $this->hasMany(RecordedGame::class, 'uploader_id');
+    }
+
+    /**
+     * Relationship to the sets created by this user.
+     */
+    public function sets()
+    {
+        return $this->hasMany(GameSet::class, 'author_id');
+    }
+
+    /**
+     * Relationship to the games this user participated in.
+     */
+    public function participated()
+    {
+        // Once RecAnalyst supports extracting Steam IDs from records,
+        // this relationship can fetch games with players with that Steam ID.
+        throw new \Exception('Unimplemented');
+    }
 }

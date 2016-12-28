@@ -60,7 +60,9 @@ class SocialiteController extends Controller
         if (!$model && $auth->check()) {
             // Associate logged-in user with this Steam ID.
             $model = $auth->user();
-            $model->update('steam_id', $user->id);
+            $model->update([
+                'steam_id'=> $user->id,
+            ]);
         } else if (!$model) {
             // Create a new user for this Steam ID.
             // TODO deal with the case where the username is taken.
