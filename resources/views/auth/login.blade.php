@@ -19,6 +19,14 @@
             </div>
           @endif
 
+          <div class="columns has-text-centered">
+            <div class="column">
+              <a href="{{ action('Auth\SocialiteController@steamRedirect') }}">
+                <img alt="Steam Login" src="{{ asset('img/steam-login.png') }}">
+              </a>
+            </div>
+          </div>
+
           <form role="form" method="POST" action="{{ route('login') }}">
             {{ csrf_field() }}
 

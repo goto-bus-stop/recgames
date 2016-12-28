@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use Socialite;
 use Illuminate\Http\Request;
-use SocialiteProviders\Manager\Config;
+use Illuminate\Contracts\Auth\Factory as AuthManager;
 use SocialiteProviders\Steam\OpenIDValidationException;
-use SocialiteProviders\Manager\Contracts\ConfigInterface;
+use SocialiteProviders\Manager\{Contracts\ConfigInterface, Config};
 
+use App\Model\User;
 use App\Http\Controllers\Controller;
 
 class SocialiteController extends Controller
@@ -45,7 +46,7 @@ class SocialiteController extends Controller
     /**
      * Process a Steam login.
      */
-    public function steamCallback()
+    public function steamCallback(AuthManager $auth)
     {
         try {
             $user = $this->steam()->user();
@@ -55,6 +56,23 @@ class SocialiteController extends Controller
             ]);
         }
 
-        abort(500, 'Steam login is not yet implemented.');
+        $model = User::fromSteamId($user->id);
+        if (!$model && $auth->check()) {
+            // Associate logged-in user with this Steam ID.
+            $model = $auth->user();
+            $model->update('steam_id', $user->id);
+        } else if (!$model) {
+            // Create a new user for this Steam ID.
+            // TODO deal with the case where the username is taken.
+            $model = User::create([
+                'name' => $user->nickname,
+                'steam_id' => $user->id,
+            ]);
+        }
+
+        // Log in as this Steam ID.
+        $auth->login($model);
+
+        return redirect()->action('GamesController@list');
     }
 }

@@ -31,8 +31,12 @@
       <div class="nav-right nav-menu">
         <a class="nav-item" href="{{ action('GamesController@list') }}">Games</a>
         <a class="nav-item" href="{{ action('SetsController@list') }}">Sets</a>
-        <a class="nav-item" href="{{ route('login') }}">Log in</a>
-        <a class="nav-item" href="{{ route('register') }}">Create Account</a>
+        @if (Auth::check())
+          <a class="nav-item" href="{{ url('/profile') }}">{{ Auth::user()->name }}</a>
+        @else
+          <a class="nav-item" href="{{ route('login') }}">Log in</a>
+          <a class="nav-item" href="{{ route('register') }}">Create Account</a>
+        @endif
         <span class="nav-item">
           <a class="button is-primary" href="{{ action('GamesController@upload') }}">
             <span>Upload</span>
