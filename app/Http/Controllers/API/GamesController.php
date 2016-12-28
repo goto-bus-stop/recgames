@@ -21,49 +21,13 @@ class GamesController extends Controller
     }
 
     /**
-     * Serialize a game into a JSON-API compatible array.
-     *
-     * @param \App\Model\RecordedGame  $rec  Recorded game model.
-     * @return array
-     */
-    private function serializeGame(RecordedGame $rec): array
-    {
-        return [
-            'type' => 'recorded-games',
-            'id' => $rec->slug,
-            'attributes' => [
-                'filename' => $rec->filename ?? null,
-                'status' => $rec->status,
-            ],
-            'relationships' => [],
-            'links' => [
-                'self' => action('API\GamesController@show', $rec->slug),
-                'upload' => action('API\GamesController@upload', $rec->slug),
-                'download' => action('API\GamesController@download', $rec->slug),
-                'page' => action('GamesController@show', $rec->slug),
-                'embed' => action('GamesController@embed', $rec->slug),
-            ],
-        ];
-    }
-
-    /**
      * List public recorded games.
      */
     public function list()
     {
         $games = RecordedGame::paginate(10);
-        return response()->json([
-            'links' => [
-                'first' => $games->url(0),
-                'last' => $games->url($games->lastPage()),
-                'prev' => $games->previousPageUrl(),
-                'next' => $games->nextPageUrl(),
-            ],
-            'meta' => [],
-            'data' => $games->map(function (RecordedGame $game): array {
-                return $this->serializeGame($game);
-            })->all(),
-        ], 200);
+
+        return response()->jsonapi()->list($games);
     }
 
     /**
@@ -76,10 +40,7 @@ class GamesController extends Controller
         $recordedGame = (new RecordedGame([]))->generatedSlug();
         $recordedGame->save();
 
-        return response()->json([
-            'meta' => [],
-            'data' => $this->serializeGame($recordedGame),
-        ], 200);
+        return response()->jsonapi()->single($recordedGame);
     }
 
     /**
@@ -90,11 +51,11 @@ class GamesController extends Controller
     public function show(string $slug)
     {
         $recordedGame = RecordedGame::fromSlug($slug);
+        if (!$recordedGame) {
+            throw new NotFoundException('That recorded game does not exist.');
+        }
 
-        return response()->json([
-            'meta' => [],
-            'data' => $this->serializeGame($recordedGame),
-        ], 200);
+        return response()->jsonapi()->single($recordedGame);
     }
 
     /**
@@ -144,14 +105,11 @@ class GamesController extends Controller
         dispatch(RecAnalyzeJob::uploaded($recordedGame));
 
         $id = $recordedGame->slug;
-        return response()->json([
-            'links' => [
-                'download' => action('API\GamesController@download', $id),
-                'recorded-game' => action('API\GamesController@show', $id),
-                'page' => action('GamesController@show', $id),
-            ],
-            'data' => [],
-        ], 200);
+        return response()->jsonapi()->links([
+            'download' => action('API\GamesController@download', $id),
+            'recorded-game' => action('API\GamesController@show', $id),
+            'page' => action('GamesController@show', $id),
+        ])->empty();
     }
 
     /**
@@ -184,8 +142,6 @@ class GamesController extends Controller
 
         dispatch(RecAnalyzeJob::reanalyze($recordedGame));
 
-        return [
-            'data' => [],
-        ];
+        return response()->jsonapi()->empty();
     }
 }

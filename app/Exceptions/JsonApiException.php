@@ -5,6 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Throwable;
 use Illuminate\Http\JsonResponse;
+use Neomerx\JsonApi\Document\Error;
 
 class JsonApiException extends Exception
 {
@@ -44,19 +45,23 @@ class JsonApiException extends Exception
     public function links(array $links): JsonApiException
     {
         $this->links = $links;
+
         return $this;
     }
 
-    public function response(): JsonResponse
+    public function response()
     {
-        return response()->json([
-            'links' => $this->links,
-            'errors' => [
-                [
-                    'code' => $this->getName(),
-                    'title' => $this->getMessage(),
-                ],
-            ],
-        ], $this->getStatus());
+        $error = new Error(
+            null,
+            null,
+            $this->getStatus(),
+            $this->getName(),
+            $this->getMessage()
+        );
+
+        return response()->jsonapi($this->getStatus())
+            ->links($this->links)
+            ->error($error)
+            ->response();
     }
 }

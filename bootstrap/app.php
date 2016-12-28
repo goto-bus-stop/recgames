@@ -41,6 +41,10 @@ $app->singleton(
     App\Exceptions\Handler::class
 );
 
+Illuminate\Routing\ResponseFactory::macro('jsonapi', function (...$args) {
+    return new App\Http\JsonApiResponse(...$args);
+});
+
 /*
 |--------------------------------------------------------------------------
 | Return The Application
