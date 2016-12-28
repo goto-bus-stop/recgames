@@ -22,7 +22,7 @@ class JsonApiResponse extends BaseResponse
     {
         $this->encoder = Encoder::instance(
             config('jsonapi.schemas'),
-            new EncoderOptions(JSON_PRETTY_PRINT, route('api.base'))
+            new EncoderOptions(JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES, route('api.base'))
         )->withJsonApiVersion();
 
         parent::__construct('', $status);
