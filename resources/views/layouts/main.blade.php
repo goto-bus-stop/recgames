@@ -47,6 +47,9 @@
       <p class="has-text-centered">
         recgam.es · <a href="https://github.com/goto-bus-stop/recgames">github</a>
       </p>
+      <p class="has-text-centered">
+        Support recgam.es hosting and development by <a href="https://paypal.me/recgames">making a donation</a>!
+      </p>
     </div>
   </footer>
 
