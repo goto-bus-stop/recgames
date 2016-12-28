@@ -29,8 +29,10 @@ class GameSetSchema extends SchemaProvider
     {
         return [
             'items' => [
-                self::DATA => $set->recordedGames,
-                self::SHOW_SELF    => true,
+                self::DATA => function () use ($set) {
+                    return $set->recordedGames;
+                },
+                self::SHOW_SELF => true,
                 self::SHOW_RELATED => true,
             ],
         ];

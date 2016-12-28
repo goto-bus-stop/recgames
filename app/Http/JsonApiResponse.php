@@ -11,12 +11,32 @@ use Neomerx\JsonApi\Contracts\Encoder\Parameters\EncodingParametersInterface;
 
 class JsonApiResponse extends BaseResponse
 {
+    /**
+     * JSON-API encoder to use.
+     *
+     * @var \Neomerx\JsonApi\Contracts\Encoder\EncoderInterface
+     */
     private $encoder;
+
+    /**
+     * Encoding parameters to use.
+     *
+     * @var \Neomerx\JsonApi\Contracts\Encoder\Parameters\EncodingParametersInterface
+     */
     private $parameters;
+
+    /**
+     * Data to send in the response.
+     *
+     * @var mixed
+     */
     private $data;
 
     /**
      * Constructor.
+     *
+     * @param int  $status  HTTP status.
+     * @return void
      */
     public function __construct($status = 200)
     {
@@ -28,7 +48,12 @@ class JsonApiResponse extends BaseResponse
         parent::__construct('', $status);
     }
 
-    private function makeLink($target)
+    /**
+     * Create a Link instance from a URL string.
+     *
+     * @return \Neomerx\JsonApi\Contracts\Document\LinkInterface
+     */
+    private function makeLink(string $target)
     {
         if (!$target) {
             return null;
@@ -36,6 +61,13 @@ class JsonApiResponse extends BaseResponse
         return new Link($target, null, true);
     }
 
+    /**
+     * Configure links for the response.
+     *
+     * @param array  $links  Links as an associative array, string name =>
+     *     string url.
+     * @return $this
+     */
     public function links($links)
     {
         $this->encoder->withLinks(array_map([&$this, 'makeLink'], $links));
@@ -43,29 +75,44 @@ class JsonApiResponse extends BaseResponse
         return $this;
     }
 
-    public function single($model)
+    /**
+     * Send a single resource in the response.
+     *
+     * @return this
+     */
+    public function single($resource)
     {
-        $this->data = $model;
+        $this->data = $resource;
 
         return $this;
     }
 
-    public function list($data)
+    /**
+     * Send a list of resources in the response.
+     *
+     * @return this
+     */
+    public function list($resources)
     {
-        $this->data = $data;
+        $this->data = $resources;
 
-        if ($data instanceof LengthAwarePaginator) {
+        if ($resources instanceof LengthAwarePaginator) {
             $this->links([
-                'first' => $data->url(0),
-                'last' => $data->url($data->lastPage()),
-                'prev' => $data->previousPageUrl(),
-                'next' => $data->nextPageUrl(),
+                Link::FIRST => $resources->url(0),
+                Link::LAST => $resources->url($resources->lastPage()),
+                Link::PREV => $resources->previousPageUrl(),
+                Link::NEXT => $resources->nextPageUrl(),
             ]);
         }
 
         return $this;
     }
 
+    /**
+     * Send an empty response.
+     *
+     * @return $this
+     */
     public function empty()
     {
         $this->data = null;
@@ -73,6 +120,12 @@ class JsonApiResponse extends BaseResponse
         return $this;
     }
 
+    /**
+     * Send an Error response.
+     *
+     * @param \Neomerx\JsonApi\Document\Error  $error  Error object.
+     * @return $this
+     */
     public function error(Error $error)
     {
         $this->data = $error;
@@ -80,6 +133,12 @@ class JsonApiResponse extends BaseResponse
         return $this;
     }
 
+    /**
+     * Configure encoding parameters for the response.
+     *
+     * @param \Neomerx\JsonApi\Contracts\Encoder\Parameters\EncodingParametersInterface  $parameters
+     * @return $this
+     */
     public function parameters(EncodingParametersInterface $parameters)
     {
         $this->parameters = $parameters;
@@ -87,7 +146,13 @@ class JsonApiResponse extends BaseResponse
         return $this;
     }
 
-    public function response()
+    /**
+     * Finalise the response.
+     *
+     * @return \Symfony\Component\HttpFoundation\Response Response object ready
+     *     for further use by Laravel.
+     */
+    public function response(): BaseResponse
     {
         if ($this->data instanceof Error) {
             $this->setContent($this->encoder->encodeError($this->data));
