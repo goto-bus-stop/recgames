@@ -24,4 +24,15 @@ class GameSetSchema extends SchemaProvider
             'updated-at' => $set->updated_at->toW3cString(),
         ];
     }
+
+    public function getRelationships($set, $isPrimary, array $include)
+    {
+        return [
+            'items' => [
+                self::DATA => $set->recordedGames,
+                self::SHOW_SELF    => true,
+                self::SHOW_RELATED => true,
+            ],
+        ];
+    }
 }
