@@ -121,8 +121,9 @@
                 Recgam.es stores your Twitch user ID and display name.
               </p>
             </div>
-            <a href="{{ action('Auth\SocialiteController@twitchRedirect') }}">
-              <img alt="Connect Twitch" src="{{ asset('img/twitch-login.png') }}">
+            <a href="{{ action('Auth\SocialiteController@twitchRedirect') }}"
+                class="SocialAuthButton is-twitch">
+              <i class="SocialAuthButton-icon fa fa-twitch" aria-hidden="true"></i> Connect to Twitch
             </a>
           @endif
         </div>
@@ -149,8 +150,9 @@
               </p>
             </div>
             <p>
-              <a href="{{ action('Auth\SocialiteController@steamRedirect') }}">
-                <img alt="Connect Steam" src="{{ asset('img/steam-login.png') }}">
+              <a href="{{ action('Auth\SocialiteController@steamRedirect') }}"
+                 class="SocialAuthButton is-steam">
+                <i class="SocialAuthButton-icon fa fa-steam" aria-hidden="true"></i> Connect to Steam
               </a>
             </p>
           @endif

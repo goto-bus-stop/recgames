@@ -21,11 +21,13 @@
 
           <div class="columns has-text-centered">
             <div class="column">
-              <a href="{{ action('Auth\SocialiteController@steamRedirect') }}">
-                <img alt="Steam Login" src="{{ asset('img/steam-login.png') }}">
+              <a href="{{ action('Auth\SocialiteController@steamRedirect') }}"
+                 class="SocialAuthButton is-steam">
+                <i class="SocialAuthButton-icon fa fa-steam" aria-hidden="true"></i> Sign in with Steam
               </a>
-              <a href="{{ action('Auth\SocialiteController@twitchRedirect') }}">
-                <img alt="Twitch Login" src="{{ asset('img/twitch-login.png') }}">
+              <a href="{{ action('Auth\SocialiteController@twitchRedirect') }}"
+                 class="SocialAuthButton is-twitch">
+                <i class="SocialAuthButton-icon fa fa-twitch" aria-hidden="true"></i> Sign in with Twitch
               </a>
             </div>
           </div>

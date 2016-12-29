@@ -9,6 +9,7 @@
 
   <title>@yield('title') · recgam.es</title>
   <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+  <link href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css" rel="stylesheet">
 </head>
 <body class="nojs">
   {{-- UI State --}}

@@ -1,0 +1,25 @@
+@mixin makeAuthButton($color) {
+    background-color: $color;
+    &:hover, &:focus, &.is-active {
+        background-color: darken($color, 5%);
+    }
+}
+
+.SocialAuthButton {
+    @extend .button;
+    @extend .button.is-dark;
+
+    color: $white;
+
+    &-icon {
+        margin-right: 5px;
+    }
+
+    &.is-steam {
+        @include makeAuthButton($dark);
+    }
+
+    &.is-twitch {
+        @include makeAuthButton(#6c4a99);
+    }
+}
