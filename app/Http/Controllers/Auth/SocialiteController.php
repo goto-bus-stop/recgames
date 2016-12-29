@@ -76,6 +76,17 @@ class SocialiteController extends Controller
     }
 
     /**
+     * Disconnect a user's account from a social login.
+     */
+    private function disconnect($user, $key)
+    {
+        if ($user) {
+            $user->update([$key => null]);
+        }
+        return redirect()->back();
+    }
+
+    /**
      * Redirect to the Steam login page.
      */
     public function steamRedirect()
@@ -102,6 +113,14 @@ class SocialiteController extends Controller
     }
 
     /**
+     * Disconnect the user's Steam account from their recgam.es account.
+     */
+    public function steamDisconnect(AuthManager $auth)
+    {
+        return $this->disconnect($auth->user(), 'steam_id');
+    }
+
+    /**
      * Redirect to the Twitch login page.
      */
     public function twitchRedirect()
@@ -125,5 +144,13 @@ class SocialiteController extends Controller
         $model = $this->completeAuth($auth, $user, 'twitch_id');
 
         return redirect()->action('GamesController@list');
+    }
+
+    /**
+     * Disconnect the user's Twitch.tv account from their recgam.es account.
+     */
+    public function twitchDisconnect(AuthManager $auth)
+    {
+        return $this->disconnect($auth->user(), 'twitch_id');
     }
 }

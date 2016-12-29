@@ -26,7 +26,15 @@ Route::get('/set/{slug}', 'SetsController@show')->name('sets.show');
 Route::get('/recanalyst', 'RecAnalystController@index')->name('recanalyst');
 
 Route::get('/profile/{user}', 'ProfileController@show');
-Route::get('/profile', 'ProfileController@showSelf')->name('profile');
+
+Route::get('/recanalyst', 'RecAnalystController@index');
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/profile', 'ProfileController@showSelf')->name('profile');
+    Route::get('/settings', 'ProfileController@settings');
+    Route::post('/auth/local', 'ProfileController@changeLocalLogin');
+    Route::get('/auth/local/disconnect', 'ProfileController@removeLocalLogin');
+});
 
 Route::group(['namespace' => 'Auth'], function () {
     Route::get('/login', 'LoginController@showLoginForm')->name('login');
@@ -44,6 +52,8 @@ Route::group(['namespace' => 'Auth'], function () {
     // Social logins
     Route::get('/auth/steam', 'SocialiteController@steamRedirect');
     Route::get('/auth/steam/callback', 'SocialiteController@steamCallback');
+    Route::get('/auth/steam/disconnect', 'SocialiteController@steamDisconnect');
     Route::get('/auth/twitch', 'SocialiteController@twitchRedirect');
     Route::get('/auth/twitch/callback', 'SocialiteController@twitchCallback');
+    Route::get('/auth/twitch/disconnect', 'SocialiteController@twitchDisconnect');
 });
