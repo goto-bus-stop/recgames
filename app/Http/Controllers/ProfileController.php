@@ -34,8 +34,13 @@ class ProfileController extends Controller
      */
     public function settings(AuthManager $auth)
     {
+        $user = $auth->user();
+
         return view('users.settings', [
-            'user' => $auth->user(),
+            'user' => $user,
+            'canDisconnectLocal' => $user->steam_id || $user->twitch_id,
+            'canDisconnectSteam' => $user->email || $user->twitch_id,
+            'canDisconnectTwitch' => $user->email || $user->steam_id,
         ]);
     }
 
@@ -95,6 +100,13 @@ class ProfileController extends Controller
     public function removeLocalLogin(AuthManager $auth)
     {
         $user = $auth->user();
+
+        if (!$user->steam_id && !$user->twitch_id) {
+            return redirect()->back()->withErrors([
+                'local' => 'Removing these login details would make your account inaccessible. ' .
+                           'Please add a Social login before removing your recgam.es login details.'
+            ]);
+        }
 
         $user->email = null;
         $user->password = null;

@@ -20,11 +20,15 @@
           <div class="content">
             @if ($user->email)
               <p>
-                You can change your email address and password below. You can also
-                <a href="{{ action('ProfileController@removeLocalLogin') }}">disable email/password login</a>,
-                if you would prefer to use Steam or Twitch login exclusively going forward.
-                You can always add an email/password login combination to your recgam.es
-                account again later.
+                You can change your email address and password below.
+
+                @if ($canDisconnectLocal)
+                  You can also
+                  <a href="{{ action('ProfileController@removeLocalLogin') }}">disable email/password login</a>,
+                  if you would prefer to use Steam or Twitch login exclusively going forward.
+                  You can always add an email/password login combination to your recgam.es
+                  account again later.
+                @endif
               </p>
             @else
               <p>
@@ -108,9 +112,11 @@
               <p>
                 Connected with Twitch.
               </p>
-              <p>
-                <a href="{{ action('Auth\SocialiteController@twitchDisconnect') }}">Disconnect?</a>
-              </p>
+              @if ($canDisconnectTwitch)
+                <p>
+                  <a href="{{ action('Auth\SocialiteController@twitchDisconnect') }}">Disconnect?</a>
+                </p>
+              @endif
             </div>
           @else
             <div class="content">
@@ -134,9 +140,11 @@
               <p>
                 Connected with Steam.
               </p>
-              <p>
-                <a href="{{ action('Auth\SocialiteController@steamDisconnect') }}">Disconnect?</a>
-              </p>
+              @if ($canDisconnectSteam)
+                <p>
+                  <a href="{{ action('Auth\SocialiteController@steamDisconnect') }}">Disconnect?</a>
+                </p>
+              @endif
             </div>
           @else
             <div class="content">
