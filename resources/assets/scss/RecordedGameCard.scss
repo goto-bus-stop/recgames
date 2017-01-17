@@ -1,0 +1,33 @@
+.RecordedGameCard {
+    @extend .card;
+
+    &-main {
+        @extend .card-image;
+    }
+    &-data {
+        @extend .card-hover-data;
+    }
+
+    &-image {
+        @extend .image.is-2by1;
+    }
+
+    &-name {
+        @extend .card-content;
+        > p {
+            word-wrap: break-word;
+        }
+    }
+
+    &-footer {
+        @extend .card-footer;
+    }
+
+    &-time {
+        @extend .card-footer-item;
+    }
+
+    &-link {
+        @extend .card-footer-item;
+    }
+}
