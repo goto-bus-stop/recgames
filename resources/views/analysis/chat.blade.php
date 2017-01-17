@@ -2,10 +2,16 @@
   <h3 class="subtitle">Pre-game</h3>
   @forelse ($pregame as $message)
     <div class="ChatMessage">
-      <span class="ChatMessage-sender
-                   @if ($message->player()->colorId !== -1) is-player-{{ $message->player()->color }} @endif">
-        {{ $message->player()->name }}
-      </span>:
+      @if ($message->player())
+        <span class="ChatMessage-sender
+                    @if ($message->player()->colorId !== -1) is-player-{{ $message->player()->color }} @endif">
+          {{ $message->player()->name }}
+        </span>:
+      @else
+        <span class="ChatMessage-sender" style="background: #f00; color: #fff">
+          Unknown player
+        </span>:
+      @endif
       {{ $message->message }}
     </div>
   @empty
