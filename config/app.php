@@ -177,6 +177,7 @@ return [
         App\Providers\AnalysisSearchServiceProvider::class,
         App\Providers\AnalysisStorageServiceProvider::class,
         App\Providers\EventServiceProvider::class,
+        App\Providers\JsonApiServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\RecAnalystProvider::class,
 

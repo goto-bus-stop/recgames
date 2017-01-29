@@ -11,55 +11,13 @@ use App\Model\RecordedGame;
 class SetsController extends Controller
 {
     /**
-     * Serialize a set into a JSON-API compatible array.
-     *
-     * @param \App\Model\GameSet  $set  Set.
-     * @return array
-     */
-    private function serializeSet(GameSet $set): array
-    {
-        return [
-            'type' => 'sets',
-            'id' => $set->slug,
-            'attributes' => [
-                'title' => $set->title,
-                'description' => $set->description,
-            ],
-            'relationships' => [
-                'games' => [
-                    'links' => [
-                        'related' => action('API\SetsController@showGames', $set->slug),
-                    ],
-                    'data' => $set->recordedGames->map(function (RecordedGame $rec): array {
-                        return ['type' => 'recorded-games', 'id' => $rec->slug];
-                    })->all(),
-                ],
-            ],
-            'links' => [
-                'self' => action('API\SetsController@show', $set->slug),
-            ],
-        ];
-    }
-
-    /**
      * List public sets.
      */
     public function list()
     {
         $sets = GameSet::paginate(10);
 
-        return response()->json([
-            'links' => [
-                'first' => $sets->url(0),
-                'last' => $sets->url($sets->lastPage()),
-                'prev' => $sets->previousPageUrl(),
-                'next' => $sets->nextPageUrl(),
-            ],
-            'meta' => [],
-            'data' => $sets->getCollection()->map(function (GameSet $set): array {
-                return $this->serializeSet($set);
-            })->all(),
-        ], 200);
+        return response()->jsonapi()->list($sets);
     }
 
     /**
@@ -70,10 +28,11 @@ class SetsController extends Controller
     public function show(string $slug)
     {
         $set = GameSet::fromSlug($slug);
-        return response()->json([
-            'meta' => [],
-            'data' => $this->serializeSet($set),
-        ], 200);
+        if (!$set) {
+            throw new NotFoundException('That set does not exist.');
+        }
+
+        return response()->jsonapi()->single($set);
     }
 
     /**
@@ -108,6 +67,6 @@ class SetsController extends Controller
             );
         }
 
-        return response()->json($this->serializeSet($set), 200);
+        return response()->jsonapi()->single($set);
     }
 }
