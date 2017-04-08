@@ -5,7 +5,7 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": ">=7.0.0",
+        "php": ">=7.1.0",
         "ext-imagick": "*",
         "laravel/framework": "5.3.*",
         "recanalyst/recanalyst": "^4.0.0",
