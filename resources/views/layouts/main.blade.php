@@ -9,6 +9,7 @@
 
   <title>@yield('title') · recgam.es</title>
   <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+  <link href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css" rel="stylesheet">
 </head>
 <body class="nojs">
   {{-- UI State --}}
@@ -31,6 +32,14 @@
       <div class="nav-right nav-menu">
         <a class="nav-item" href="{{ action('GamesController@list') }}">Games</a>
         <a class="nav-item" href="{{ action('SetsController@list') }}">Sets</a>
+        @if (Auth::check())
+          <a class="nav-item" href="{{ action('ProfileController@showSelf') }}">
+            {{ Auth::user()->name }}
+          </a>
+        @else
+          <a class="nav-item" href="{{ route('login') }}">Log in</a>
+          <a class="nav-item" href="{{ route('register') }}">Create Account</a>
+        @endif
         <span class="nav-item">
           <a class="button is-primary" href="{{ action('GamesController@upload') }}">
             <span>Upload</span>

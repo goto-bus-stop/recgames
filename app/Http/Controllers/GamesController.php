@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use Emgag\Flysystem\Tempdir;
 use Illuminate\Http\Request;
-use Illuminate\Contracts\Filesystem\Factory as Filesystem;
+use Illuminate\Contracts\{
+    Filesystem\Factory as Filesystem,
+    Auth\Factory as AuthManager
+};
 
 use App\Http\Requests;
 use App\Jobs\RecAnalyzeJob;
@@ -31,7 +34,7 @@ class GamesController extends Controller
     /**
      * Upload and save a recorded game file.
      */
-    public function upload(Request $request)
+    public function upload(Request $request, AuthManager $auth)
     {
         $this->validate($request, [
             'recorded_game' => 'required',
@@ -46,11 +49,14 @@ class GamesController extends Controller
             }
         }
 
+        $user = $auth->user();
+
         $set = (new GameSet([
             'title' => $title,
             'description' => 'Auto-generated set for multiple upload.',
         ]))->generatedSlug();
-        $set->save();
+
+        $user->sets()->save($set);
 
         $temp = new Tempdir();
         $models = collect($files)
@@ -63,6 +69,9 @@ class GamesController extends Controller
             });
 
         $set->recordedGames()->saveMany($models);
+        if ($user) {
+            $user->uploaded()->saveMany($models);
+        }
 
         $models->each(function ($rec) {
             dispatch(RecAnalyzeJob::uploaded($rec));

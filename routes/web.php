@@ -24,3 +24,36 @@ Route::get('/sets', 'SetsController@list')->name('sets.list');
 Route::get('/set/{slug}', 'SetsController@show')->name('sets.show');
 
 Route::get('/recanalyst', 'RecAnalystController@index')->name('recanalyst');
+
+Route::get('/profile/{user}', 'ProfileController@show');
+
+Route::get('/recanalyst', 'RecAnalystController@index');
+
+Route::group(['middleware' => 'auth'], function () {
+    Route::get('/profile', 'ProfileController@showSelf')->name('profile');
+    Route::get('/settings', 'ProfileController@settings');
+    Route::post('/auth/local', 'ProfileController@changeLocalLogin');
+    Route::get('/auth/local/disconnect', 'ProfileController@removeLocalLogin');
+});
+
+Route::group(['namespace' => 'Auth'], function () {
+    Route::get('/login', 'LoginController@showLoginForm')->name('login');
+    Route::post('/login', 'LoginController@login');
+    Route::post('/logout', 'LoginController@logout')->name('logout');
+
+    Route::get('/register', 'RegisterController@showRegistrationForm')->name('register');
+    Route::post('/register', 'RegisterController@register');
+
+    Route::get('/password/reset', 'ForgotPasswordController@showLinkRequestForm')->name('password.reset');
+    Route::post('/password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+    Route::get('/password/reset/{token}', 'ResetPasswordController@showResetForm');
+    Route::post('/password/reset', 'ResetPasswordController@reset');
+
+    // Social logins
+    Route::get('/auth/steam', 'SocialiteController@steamRedirect');
+    Route::get('/auth/steam/callback', 'SocialiteController@steamCallback');
+    Route::get('/auth/steam/disconnect', 'SocialiteController@steamDisconnect');
+    Route::get('/auth/twitch', 'SocialiteController@twitchRedirect');
+    Route::get('/auth/twitch/callback', 'SocialiteController@twitchCallback');
+    Route::get('/auth/twitch/disconnect', 'SocialiteController@twitchDisconnect');
+});

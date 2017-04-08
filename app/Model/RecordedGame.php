@@ -38,6 +38,15 @@ class RecordedGame extends Model
     }
 
     /**
+     * Relationship to the user who uploaded this game. NULL if the game was
+     * uploaded while not logged in.
+     */
+    public function uploader()
+    {
+        return $this->belongsTo(User::class, 'uploader_id');
+    }
+
+    /**
      * Query scope that filters games based on whether the players in them match
      * a given regex.
      *

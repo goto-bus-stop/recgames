@@ -44,7 +44,15 @@ class GameSet extends Model
     }
 
     /**
-     *
+     * Relationship to the user who created this set.
+     */
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'author_id');
+    }
+
+    /**
+     * Get the Recorded Game to use as the thumbnail.
      */
     public function getThumbnailGameAttribute()
     {
