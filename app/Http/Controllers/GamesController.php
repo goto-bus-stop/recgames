@@ -135,7 +135,13 @@ class GamesController extends Controller
             dispatch(RecAnalyzeJob::reanalyze($rec));
         }
 
-        $doc = $analyses->get($rec->analysis->id);
+        try {
+            $doc = $analyses->get($rec->analysis->id);
+        } catch (\Exception $e) {
+            return view('games.show_missing', [
+                'rec' => $rec,
+            ]);
+        }
         $html = view('analysis.index', [
             'achievements' => !!($doc->players()->first()->achievements ?? false),
             'rec' => $rec,
