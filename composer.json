@@ -1,7 +1,10 @@
 {
-    "name": "laravel/laravel",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "name": "recgames/recgames",
+    "description": "recgam.es is a FOSS Age of Empires 2 recorded games storage, indexing and search service.",
+    "keywords": [
+        "age-of-empires",
+        "recorded-games"
+    ],
     "license": "MIT",
     "type": "project",
     "require": {
