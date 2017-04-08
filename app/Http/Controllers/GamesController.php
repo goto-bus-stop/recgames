@@ -138,6 +138,8 @@ class GamesController extends Controller
         try {
             $doc = $analyses->get($rec->analysis->id);
         } catch (\Exception $e) {
+            dispatch(RecAnalyzeJob::reanalyze($rec));
+
             return view('games.show_missing', [
                 'rec' => $rec,
             ]);
