@@ -5,8 +5,10 @@ Age of Empires 2 recorded games storage, indexing and search service.
 
 [Live Site][recgam.es] - [License][] - [Requirements][]
 
-<img alt="listing" src="./.github/screenshots/listing.png" style="max-height: 500px">
-<img alt="general" src="./.github/screenshots/general.png" style="max-height: 500px">
+<p>
+  <img alt="listing" src="./.github/screenshots/listing.png" style="max-height: 500px">
+  <img alt="general" src="./.github/screenshots/general.png" style="max-height: 500px">
+</p>
 
 It's built on [Laravel][] and [RecAnalyst][].
 
