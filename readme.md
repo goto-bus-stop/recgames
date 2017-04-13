@@ -20,12 +20,12 @@ It's built on [Laravel][] and [RecAnalyst][].
 
 Running a local copy of [recgam.es][] requires:
 
- - PHP 7.0 or higher
+ - PHP **7.1** or higher
  - The Imagick extension
  - A MySQL database
  - [ElasticSearch][]
  - [Composer][], for PHP dependencies
- - [Node.js][], for frontend dependencies and code
+ - [Node.js][] **6** or higher, for frontend dependencies and code
 
 ## Setup
 

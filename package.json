@@ -4,6 +4,9 @@
     "prod": "cross-env NODE_ENV=production gulp --production",
     "dev": "cross-env NODE_ENV=development gulp watch default"
   },
+  "engines": {
+    "node": ">= 6"
+  },
   "dependencies": {
     "bulma": "^0.2.3",
     "css.escape": "^1.5.1",
