@@ -40,7 +40,13 @@ class GamesController extends Controller
         $recordedGame = (new RecordedGame([]))->generatedSlug();
         $recordedGame->save();
 
-        return response()->jsonapi()->single($recordedGame);
+        return response()
+            ->jsonapi()
+            ->links([
+                'upload' => action('API\GamesController@upload', $recordedGame->slug),
+                'page' => action('GamesController@show', $recordedGame->slug),
+            ])
+            ->single($recordedGame);
     }
 
     /**

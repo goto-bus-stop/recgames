@@ -18,9 +18,9 @@ const uploadGame = ({ dispatch }) => next => action => {
     fetch(createUrl, {
       method: 'post',
       headers: { accept: 'application/json' }
-    }).then((response) => response.json()).then(({ data }) => {
+    }).then((response) => response.json()).then(({ links }) => {
       const xhr = new XMLHttpRequest()
-      xhr.open('POST', data.links.upload)
+      xhr.open('POST', links.upload)
       xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest')
       xhr.setRequestHeader('Accept', 'application/json')
       xhr.onload = () => {
