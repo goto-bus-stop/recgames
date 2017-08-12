@@ -11,7 +11,7 @@
         "php": ">=7.1.0",
         "ext-imagick": "*",
         "laravel/framework": "5.4.*",
-        "recanalyst/recanalyst": "^4.1.3",
+        "recanalyst/recanalyst": "^4.2.0",
         "doctrine/dbal": "^2.5",
         "emgag/flysystem-tempdir": "^0.1.0",
         "elasticsearch/elasticsearch": "^5.0",
