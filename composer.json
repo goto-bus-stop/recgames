@@ -21,7 +21,8 @@
         "cloudcreativity/json-api": "^0.6.0",
         "laravel/socialite": "^3.0",
         "socialiteproviders/steam": "dev-master",
-        "socialiteproviders/twitch": "dev-master"
+        "socialiteproviders/twitch": "dev-master",
+        "laravel/tinker": "^1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
