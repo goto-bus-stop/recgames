@@ -1,5 +1,5 @@
 .PlayerBadge {
-    @extend .tag;
+    @extend .tag:not(body);
     overflow: hidden;
     padding-left: 0;
 
@@ -11,16 +11,5 @@
     &:hover {
         color: $white;
         background-image: linear-gradient(0deg, fade-out($black, 0.9), fade-out($black, 0.9))
-    }
-
-    @for $i from 1 through length($player-colors) {
-        &.is-player-#{$i - 1} {
-            color: nth($player-colors, $i) - #333333;
-        }
-        &.is-player-#{$i - 1}-bg {
-            $color: nth($player-colors, $i) - #333333;
-            background-color: $color;
-            color: findColorInvert($color);
-        }
     }
 }
