@@ -40,27 +40,31 @@
 
           <form method="post" action="{{ action('ProfileController@changeLocalLogin') }}">
             {{ csrf_field() }}
-            <label class="label">E-Mail Address</label>
-            <div class="control">
-              <input type="email"
-                     class="input @if ($errors->has('email')) is-danger @endif"
-                     name="email"
-                     value="{{ $user->email }}"
-                     placeholder="me@email.com">
+            <div class="field">
+              <label class="label">E-Mail Address</label>
+              <div class="control">
+                <input type="email"
+                       class="input @if ($errors->has('email')) is-danger @endif"
+                       name="email"
+                       value="{{ $user->email }}"
+                       placeholder="me@email.com">
+              </div>
 
-                @if ($errors->has('email'))
-                  <span class="help is-danger">
-                    {{ $errors->first('email') }}
-                  </span>
-                @endif
+              @if ($errors->has('email'))
+                <span class="help is-danger">
+                  {{ $errors->first('email') }}
+                </span>
+              @endif
             </div>
             @if ($user->email)
-              <label class="label">Current Password</label>
-              <div class="control">
-                <input type="password"
-                       class="input @if ($errors->has('password')) is-danger @endif"
-                       name="password"
-                       required>
+              <div class="field">
+                <label class="label">Current Password</label>
+                <div class="control">
+                  <input type="password"
+                         class="input @if ($errors->has('password')) is-danger @endif"
+                         name="password"
+                         required>
+                </div>
 
                 @if ($errors->has('password'))
                   <span class="help is-danger">
@@ -68,29 +72,35 @@
                   </span>
                 @endif
               </div>
-              <label class="label">New Password</label>
-              <div class="control">
-                <input type="password"
-                       class="input @if ($errors->has('new_password')) is-danger @endif"
-                       name="new_password"
-                       placeholder="Minimum 6 characters">
+              <div class="field">
+                <label class="label">New Password</label>
+                <div class="control">
+                  <input type="password"
+                         class="input @if ($errors->has('new_password')) is-danger @endif"
+                         name="new_password"
+                         placeholder="Minimum 6 characters">
 
-                @if ($errors->has('new_password'))
-                  <span class="help is-danger">
-                    {{ $errors->first('new_password') }}
-                  </span>
-                @endif
+                  @if ($errors->has('new_password'))
+                    <span class="help is-danger">
+                      {{ $errors->first('new_password') }}
+                    </span>
+                  @endif
+                </div>
               </div>
-              <div class="control">
-                <input type="password" class="input" name="new_password_confirmation" placeholder="Confirm New Password">
+              <div class="field">
+                <div class="control">
+                  <input type="password" class="input" name="new_password_confirmation" placeholder="Confirm New Password">
+                </div>
               </div>
             @else
               <label class="label">Password</label>
-              <div class="control">
-                <input type="password"
-                       class="input @if ($errors->has('new_password')) is-danger @endif"
-                       name="new_password"
-                       placeholder="Minimum 6 characters">
+              <div class="field">
+                <div class="control">
+                  <input type="password"
+                         class="input @if ($errors->has('new_password')) is-danger @endif"
+                         name="new_password"
+                         placeholder="Minimum 6 characters">
+                </div>
 
                 @if ($errors->has('new_password'))
                   <span class="help is-danger">
@@ -98,11 +108,17 @@
                   </span>
                 @endif
               </div>
-              <div class="control">
-                <input type="password" class="input" name="new_password_confirmation" placeholder="Confirm Password">
+              <div class="field">
+                <div class="control">
+                  <input type="password" class="input" name="new_password_confirmation" placeholder="Confirm Password">
+                </div>
               </div>
             @endif
-            <button class="button is-primary" type="submit">Update</button>
+            <div class="field">
+              <div class="control">
+                <button class="button is-primary" type="submit">Update</button>
+              </div>
+            </div>
           </form>
         </div>
         <div class="column">
