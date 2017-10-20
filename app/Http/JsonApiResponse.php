@@ -53,7 +53,7 @@ class JsonApiResponse extends BaseResponse
      *
      * @return \Neomerx\JsonApi\Contracts\Document\LinkInterface
      */
-    private function makeLink(string $target)
+    private function makeLink($target)
     {
         if (!$target) {
             return null;

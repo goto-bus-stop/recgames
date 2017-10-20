@@ -10,26 +10,27 @@
     "require": {
         "php": ">=7.1.0",
         "ext-imagick": "*",
-        "laravel/framework": "5.4.*",
+        "laravel/framework": "5.5.*",
         "recanalyst/recanalyst": "^4.2.0",
         "doctrine/dbal": "^2.5",
         "emgag/flysystem-tempdir": "^0.1.0",
         "elasticsearch/elasticsearch": "^5.0",
         "michelf/php-markdown": "^1.7",
-        "scrivo/highlight.php": "8.*",
+        "scrivo/highlight.php": "9.*",
         "nilportugues/json-api": "^2.4",
-        "cloudcreativity/json-api": "^0.6.0",
+        "cloudcreativity/json-api": "^0.11.0",
         "laravel/socialite": "^3.0",
         "socialiteproviders/steam": "dev-master",
         "socialiteproviders/twitch": "dev-master",
         "laravel/tinker": "^1.0"
     },
     "require-dev": {
+        "filp/whoops": "~2.0",
         "fzaninotto/faker": "~1.4",
-        "mockery/mockery": "0.9.*",
-        "phpunit/phpunit": "~5.7",
-        "symfony/css-selector": "3.1.*",
-        "symfony/dom-crawler": "3.1.*"
+        "mockery/mockery": "~1.0",
+        "phpunit/phpunit": "~6.0",
+        "symfony/css-selector": "~3.3",
+        "symfony/dom-crawler": "~3.3"
     },
     "autoload": {
         "classmap": [
@@ -58,6 +59,10 @@
         "post-update-cmd": [
             "Illuminate\\Foundation\\ComposerScripts::postUpdate",
             "php artisan optimize"
+        ],
+        "post-autoload-dump": [
+            "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
+            "@php artisan package:discover"
         ]
     },
     "config": {
