@@ -2,12 +2,12 @@
   <div class="columns">
     <?php $id = uniqid() ?>
     <div class="column is-narrow is-hidden-mobile">
-      <div class="control-label">
+      <div class="field-label is-normal">
         <label class="label" for="{{ $id }}">Search:</label>
       </div>
     </div>
     <div class="column">
-      <div class="control is-grouped">
+      <div class="field is-grouped">
         <div class="control is-expanded">
           <input class="input"
                 id="{{ $id }}"

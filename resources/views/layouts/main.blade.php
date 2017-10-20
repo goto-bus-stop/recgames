@@ -15,37 +15,41 @@
   {{-- UI State --}}
   <input id="s-menu-open" type="checkbox" class="is-hidden" name="{{ uniqid() }}">
 
-  <nav class="nav has-shadow">
+  <nav class="navbar is-danger has-shadow" role="navigation">
     <div class="container">
-      <div class="nav-left">
-        <a href="{{ url('/') }}" class="nav-item is-brand">
+      <div class="navbar-brand">
+        <a href="{{ url('/') }}" class="navbar-item">
           recgam.es
         </a>
+
+        <label class="navbar-burger" for="s-menu-open">
+          <span></span>
+          <span></span>
+          <span></span>
+        </label>
       </div>
 
-      <label class="nav-toggle" for="s-menu-open">
-        <span></span>
-        <span></span>
-        <span></span>
-      </label>
-
-      <div class="nav-right nav-menu">
-        <a class="nav-item" href="{{ action('GamesController@list') }}">Games</a>
-        <a class="nav-item" href="{{ action('SetsController@list') }}">Sets</a>
-        @if (Auth::check())
-          <a class="nav-item" href="{{ action('ProfileController@showSelf') }}">
-            {{ Auth::user()->name }}
-          </a>
-        @else
-          <a class="nav-item" href="{{ route('login') }}">Log in</a>
-          <a class="nav-item" href="{{ route('register') }}">Create Account</a>
-        @endif
-        <span class="nav-item">
-          <a class="button is-primary" href="{{ action('GamesController@upload') }}">
-            <span>Upload</span>
-          </a>
-        </span>
-      </ul>
+      <div class="navbar-menu">
+        <div class="navbar-start">
+          <a class="navbar-item" href="{{ action('GamesController@list') }}">Games</a>
+          <a class="navbar-item" href="{{ action('SetsController@list') }}">Sets</a>
+        </div>
+        <div class="navbar-end">
+          @if (Auth::check())
+            <a class="navbar-item" href="{{ action('ProfileController@showSelf') }}">
+              {{ Auth::user()->name }}
+            </a>
+          @else
+            <a class="navbar-item" href="{{ route('login') }}">Log in</a>
+            <a class="navbar-item" href="{{ route('register') }}">Create Account</a>
+          @endif
+          <span class="navbar-item">
+            <a class="button is-primary" href="{{ action('GamesController@upload') }}">
+              <span>Upload</span>
+            </a>
+          </span>
+        </div>
+      </div>
     </div>
   </nav>
 

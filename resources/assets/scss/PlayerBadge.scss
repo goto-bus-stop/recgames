@@ -1,5 +1,5 @@
 .PlayerBadge {
-    @extend .tag;
+    @extend .tag:not(body);
     overflow: hidden;
     padding-left: 0;
 

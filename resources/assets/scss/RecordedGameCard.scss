@@ -23,11 +23,13 @@
         @extend .card-footer;
     }
 
-    &-time {
+    &-time, &-link {
         @extend .card-footer-item;
+        padding: 0.5rem;
+        font-size: 90%;
     }
 
-    &-link {
-        @extend .card-footer-item;
+    &-time {
+        flex-grow: 2;
     }
 }

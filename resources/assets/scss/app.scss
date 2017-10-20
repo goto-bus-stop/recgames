@@ -6,13 +6,20 @@
 @import "./RecordedGameCard.scss";
 @import "./SocialAuthButton.scss";
 
+html {
+    background: $background;
+}
+.section {
+    background: $white;
+}
+
 .hljs {
     @extend code;
     font-size: inherit;
 }
 
-#s-menu-open:checked + .nav .nav-menu {
-    @extend .nav-menu.is-active;
+#s-menu-open:checked + .navbar .navbar-menu {
+    @extend .navbar-menu.is-active;
 }
 
 .nojs {
