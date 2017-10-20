@@ -6,6 +6,13 @@
 @import "./RecordedGameCard.scss";
 @import "./SocialAuthButton.scss";
 
+html {
+    background: $background;
+}
+.section {
+    background: $white;
+}
+
 .hljs {
     @extend code;
     font-size: inherit;
