@@ -11,8 +11,8 @@
     font-size: inherit;
 }
 
-#s-menu-open:checked + .nav .nav-menu {
-    @extend .nav-menu.is-active;
+#s-menu-open:checked + .navbar .navbar-menu {
+    @extend .navbar-menu.is-active;
 }
 
 .nojs {
