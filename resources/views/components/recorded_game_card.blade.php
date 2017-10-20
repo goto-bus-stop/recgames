@@ -1,6 +1,6 @@
 @inject('helpers', 'App\Services\BladeHelpersService')
 
-<div class="column">
+<div class="column is-full-mobile is-half-tablet is-one-third-desktop is-one-quarter-widescreen">
   <div class="RecordedGameCard" style="margin: auto">
     <div class="RecordedGameCard-main">
       <a href="{{ action('GamesController@show', $rec->slug) }}">
