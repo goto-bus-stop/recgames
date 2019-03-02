@@ -1,5 +1,7 @@
 # [recgam.es][]
 
+> This project is unmaintained. A more advanced and working recorded game database exists under the Siege Engineers umbrella, [aoc-mgz-db](https://github.com/SiegeEngineers/aoc-mgz-db).
+
 [recgam.es][] is a <abbr title="Free and Open Source Software">FOSS</abbr>
 Age of Empires 2 recorded games storage, indexing and search service.
 
